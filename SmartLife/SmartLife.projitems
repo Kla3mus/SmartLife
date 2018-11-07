@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>1d192e50-eae4-40ef-8ad5-412b0a4f5bd7</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>SmartLife</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Interfaces.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\Fibaro\WallPlug.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Devices\PhilipsHue\" />
+    <Folder Include="$(MSBuildThisFileDirectory)Devices\ZigBee\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\Fibaro\WallPlug FGWPEF-102-EN-A-v2.1.pdf" />
+  </ItemGroup>
+</Project>
