@@ -16,10 +16,18 @@ namespace SmartLife.Interfaces
 
 	public interface IPowerMeasure : IDivice
 	{
-		event EventHandler<decimal> CurrentPowerLoad;
+		event EventHandler<float> CurrentPowerLoad;
 	}
 
-	public interface ILedRing : IDivice
+	public interface ITemperatureMeasure : IDivice
 	{
+		
+	}
+
+	public enum MeasurementType
+	{
+		Watt,
+		Celsius,
+		Lux,
 	}
 }

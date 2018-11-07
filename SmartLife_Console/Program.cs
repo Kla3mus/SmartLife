@@ -60,6 +60,9 @@ namespace SmartLife_Console
 
 				var d = (IPowerPlug)device;
 				d.SwitchStateChanged += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> State changed! {b}"); };
+
+				var p = (IPowerMeasure)device;
+				p.CurrentPowerLoad += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> Current Load! {b}"); };
 			}
 
 			ChangeState();
@@ -69,9 +72,7 @@ namespace SmartLife_Console
 		private void ChangeState()
 		{
 			while (true)
-			{
 				SetStates(Console.ReadLine() == "1");
-			}
 		}
 
 		private void SetStates(bool state)
@@ -83,6 +84,10 @@ namespace SmartLife_Console
 
 				var d = (IPowerPlug)device;
 				d.Switch(state);
+
+				var l = (ILedRing)device;
+				l.SetDisabledColor(DisabledLedRingColor.Red);
+				l.SetEnabledColor(EnabledLedRingColor.Green);
 			}
 		}
 	}

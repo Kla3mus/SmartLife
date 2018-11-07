@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ILedRing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Interfaces.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\Fibaro\WallPlug.cs" />
   </ItemGroup>
@@ -18,6 +19,7 @@
     <Folder Include="$(MSBuildThisFileDirectory)Devices\ZigBee\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6 ES - MultiSensor 6 V1.08.pdf" />
     <None Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\Fibaro\WallPlug FGWPEF-102-EN-A-v2.1.pdf" />
   </ItemGroup>
 </Project>

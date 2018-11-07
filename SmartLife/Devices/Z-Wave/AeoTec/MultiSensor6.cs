@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SmartLife.Interfaces;
 
 namespace SmartLife.Devices.Z_Wave.AeoTec
 {
@@ -10,8 +11,8 @@ namespace SmartLife.Devices.Z_Wave.AeoTec
 	/// Device: MultiSensor 6 (Z-Wave Multisensor)
 	/// Model: ZW100-C
 	/// </summary>
-	public class MultiSensor6
+	public class MultiSensor6 : ITemperatureMeasure
 	{
-
+		public string DeviceId { get; }
 	}
 }
