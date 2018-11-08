@@ -14,13 +14,16 @@ namespace SmartLife
 	/// </summary>
 	public class WallPlug : IPowerPlug, IPowerMeasure, ILedRing
 	{
+		public event EventHandler<IReport> StateChanged;
+		public event EventHandler<IMeasurementReport> PowerMeasurementTaken;
+
 		private readonly Node _node;
 
 		public WallPlug(Node node)
 		{
 			_node                                        =  node;
-			node.GetCommandClass<SwitchBinary>().Changed += (sender, args) => { SwitchStateChanged?.Invoke(this, args.Report.Value); };
-			node.GetCommandClass<Meter>().Changed += (sender, args) => { CurrentPowerLoad?.Invoke(this, args.Report.Value); };
+			node.GetCommandClass<SwitchBinary>().Changed += (sender, args) => { StateChanged?.Invoke(this, new StateChangeReport(args.Report.Value)); };
+			node.GetCommandClass<Meter>().Changed += (sender, args) => { PowerMeasurementTaken?.Invoke(this, new PowerMeasureMeasurementReport(args.Report.Value, args.Report.Unit)); };
 		}
 
 		public async void SetEnabledColor(EnabledLedRingColor color)
@@ -45,16 +48,10 @@ namespace SmartLife
 			return (EnabledLedRingColor)value;
 		}
 
-		public event EventHandler<float> CurrentPowerLoad;
-		public event EventHandler<bool> SwitchStateChanged;
+		
 
 		public async void Switch(bool state) { await _node.GetCommandClass<SwitchBinary>().Set(state); }
 
 		public string DeviceId => $"Z-Wave #{_node.NodeID}";
-
-		private void OnChanged(object sender, ReportEventArgs<SwitchBinaryReport> e)
-		{
-			
-		}
 	}
 }

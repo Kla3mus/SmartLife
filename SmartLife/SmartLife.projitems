@@ -10,9 +10,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHumidityMeasure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ILedRing.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ILuxMeasure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Interfaces.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\Fibaro\WallPlug.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPowerMeasure.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPowerPlug.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ITemperatureMeasure.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IUvMeasure.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Report.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Devices\PhilipsHue\" />

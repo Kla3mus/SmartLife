@@ -2,32 +2,20 @@
 
 namespace SmartLife.Interfaces
 {
-
 	public interface IDivice
 	{
 		string DeviceId { get; }
 	}
 
-	public interface IPowerPlug : IDivice
+	public interface IMeasure : IDivice { }
+
+	public interface IVibrationSensor : IDivice
 	{
-		void Switch(bool state);
-		event EventHandler<bool> SwitchStateChanged;
+		//event EventHandler<VibrationSensorReport> CurrentPowerLoad;
 	}
 
-	public interface IPowerMeasure : IDivice
+	public interface IMotionSensor : IDivice
 	{
-		event EventHandler<float> CurrentPowerLoad;
-	}
-
-	public interface ITemperatureMeasure : IDivice
-	{
-		
-	}
-
-	public enum MeasurementType
-	{
-		Watt,
-		Celsius,
-		Lux,
+		//event EventHandler<MotionSensorReport> CurrentPowerLoad;
 	}
 }

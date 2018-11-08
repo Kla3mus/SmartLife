@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using RJCP.IO.Ports;
 using SmartLife;
+using SmartLife.Devices.Z_Wave.AeoTec;
 using SmartLife.Interfaces;
 using ZWave;
 
@@ -21,7 +23,7 @@ namespace SmartLife_Console
 		private readonly ZWaveController _controller;
 		public Program()
 		{
-			var portName = SerialPortStream.GetPortNames().Where(element => element != "COM1").First();
+			var portName = SerialPortStream.GetPortNames().First(element => element != "COM1");
 
 			_controller = new ZWaveController(portName);
 			_controller.ChannelClosed += (sender, args) => { Console.WriteLine($"ChannelClosed {args}"); };
@@ -44,6 +46,8 @@ namespace SmartLife_Console
 				var protocolInfo = await node.GetProtocolInfo();
 				if (protocolInfo.GenericType == GenericType.SwitchBinary)
 					_devices.Add(new WallPlug(node));
+				if (protocolInfo.GenericType == GenericType.SensorMultiLevel)
+					_devices.Add(new MultiSensor6(node));
 			}
 
 			return true;
@@ -55,14 +59,23 @@ namespace SmartLife_Console
 		{
 			foreach (IDivice device in _devices)
 			{
-				if (!(device is IPowerPlug))
-					continue;
+				if ((device is IPowerPlug))
+					((IPowerPlug)device).StateChanged += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}"); };
 
-				var d = (IPowerPlug)device;
-				d.SwitchStateChanged += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> State changed! {b}"); };
+				if ((device is IPowerMeasure))
+					((IPowerMeasure)device).PowerMeasurementTaken += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}"); };
 
-				var p = (IPowerMeasure)device;
-				p.CurrentPowerLoad += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> Current Load! {b}"); };
+				if ((device is ILuxMeasure))
+					((ILuxMeasure)device).LuxMeasurementTaken += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}"); };
+
+				if ((device is ITemperatureMeasure))
+					((ITemperatureMeasure)device).TemperatureMeasurementTaken += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}"); };
+
+				if ((device is IUvMeasure))
+					((IUvMeasure)device).UVMeasurementTaken += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}"); };
+
+				if ((device is IHumidityMeasure))
+					((IHumidityMeasure)device).HumidityMeasurementTaken += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}"); };
 			}
 
 			ChangeState();
@@ -72,9 +85,45 @@ namespace SmartLife_Console
 		private void ChangeState()
 		{
 			while (true)
-				SetStates(Console.ReadLine() == "1");
+			{
+				var command = Console.ReadLine();
+				if (command == "1")
+					SetStates(true);
+				if (command == "0")
+					SetStates(false);
+
+				if (command == "9") { SetAllColors(); }
+			}
 		}
 
+		private void SetAllColors()
+		{
+			foreach (var device in _devices)
+			{
+				if (!(device is ILedRing))
+					continue;
+
+				var l = (ILedRing)device;
+				if (isOn)
+				{
+					foreach (EnabledLedRingColor value in Enum.GetValues(typeof(EnabledLedRingColor)))
+					{
+						l.SetEnabledColor(value);
+						Thread.Sleep(1000);
+					}
+				}
+				else
+				{
+					foreach (DisabledLedRingColor value in Enum.GetValues(typeof(DisabledLedRingColor)))
+					{
+						l.SetDisabledColor(value);
+						Thread.Sleep(1000);
+					}
+				}
+			}
+		}
+
+		private bool isOn = true;
 		private void SetStates(bool state)
 		{
 			foreach (var device in _devices)
@@ -84,10 +133,13 @@ namespace SmartLife_Console
 
 				var d = (IPowerPlug)device;
 				d.Switch(state);
+				isOn = state;
 
+				/*
 				var l = (ILedRing)device;
 				l.SetDisabledColor(DisabledLedRingColor.Red);
 				l.SetEnabledColor(EnabledLedRingColor.Green);
+				*/
 			}
 		}
 	}
