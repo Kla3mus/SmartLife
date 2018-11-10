@@ -29,6 +29,6 @@ namespace SmartLife.Interfaces
 
 	public class MotionSensorReport : SensorReport
 	{
-		public MotionSensorReport(bool value) : base(ReportType.Vibration, value) { }
+		public MotionSensorReport(bool value) : base(ReportType.Motion, value) { }
 	}
 }

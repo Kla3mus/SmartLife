@@ -46,6 +46,7 @@ namespace SmartLife_Console
 				var protocolInfo = await node.GetProtocolInfo();
 				if (protocolInfo.GenericType == GenericType.SwitchBinary)
 					_devices.Add(new WallPlug(node));
+
 				if (protocolInfo.GenericType == GenericType.SensorMultiLevel)
 				{
 					var multi = new MultiSensor6(node);
@@ -53,7 +54,7 @@ namespace SmartLife_Console
 					var multiSettings = multi.Settings;
 					multiSettings.GetUpdatedSettings();
 
-					multiSettings.MotionSensorUpdateTime = new TimeSpan(0,0,10);
+					multiSettings.MotionSensorUpdateTime = new TimeSpan(0,0,30);
 
 					multiSettings.ApplyChanges();
 
@@ -92,23 +93,57 @@ namespace SmartLife_Console
 					((IVibrationSensor)device).VibrationSensorTriggered += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}"); };
 
 				if ((device is IMotionSensor))
-					((IMotionSensor)device).MotionSensorTriggered += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}"); };
+					((IMotionSensor)device).MotionSensorTriggered += (sender, b) =>
+					{
+						Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}");
+						if (CurrentState == State.Auto)
+							SetStates(b.Value);
+					};
 			}
 
-			ChangeState();
+			ChangeProgramState();
 			return true;
 		}
+		public enum State { On = 1, Off = 0, Auto = 2}
 
-		private void ChangeState()
+		private State CurrentState { get; set; } = State.Auto;
+
+		private void UpdateAccordingToState()
+		{
+			switch (CurrentState)
+			{
+				case State.On:
+					SetStates(true);
+					break;
+				case State.Off:
+				case State.Auto:
+					SetStates(false);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
+		private void ChangeProgramState()
 		{
 			while (true)
 			{
 				var command = Console.ReadLine();
 				if (command == "1")
-					SetStates(true);
+				{
+					CurrentState = State.On;
+					UpdateAccordingToState();
+				}
 				if (command == "0")
-					SetStates(false);
-
+				{
+					CurrentState = State.Off;
+					UpdateAccordingToState();
+				}
+				if (command == "2")
+				{
+					CurrentState = State.Auto;
+					UpdateAccordingToState();
+				}
 				if (command == "9") { SetAllColors(); }
 			}
 		}

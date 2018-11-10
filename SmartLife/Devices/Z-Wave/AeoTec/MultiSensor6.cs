@@ -60,17 +60,19 @@ namespace SmartLife.Devices.Z_Wave.AeoTec
 			                                                    };
 			node.GetCommandClass<Alarm>().Changed += (sender, args) =>
 			                                         {
-				                                         VibrationSensorTriggered
-					                                         ?.Invoke(this, new VibrationSensorReport(true));
+				                                         if (args.Report.Type == AlarmType.General &&
+				                                             args.Report.Detail == AlarmDetailType
+					                                             .TamperingProductCoveringRemoved)
+															 VibrationSensorTriggered?.Invoke(this, new VibrationSensorReport(true));
 			                                         };
 			node.GetCommandClass<Basic>().Changed += (sender, args) =>
 			                                         {
 				                                         bool? isDetected = null;
 
 				                                         if (0x00 == args.Report.Value)
-					                                         isDetected = true;
-				                                         if (0xFF == args.Report.Value)
 					                                         isDetected = false;
+				                                         if (0xFF == args.Report.Value)
+					                                         isDetected = true;
 
 				                                         if (isDetected == null)
 					                                         throw new
@@ -112,7 +114,7 @@ namespace SmartLife.Devices.Z_Wave.AeoTec
 
 		public async void GetUpdatedSettings()
 		{
-			GetMotionSensorUpdateTime().Wait();
+			await GetMotionSensorUpdateTime();
 			HasRunUpdateSettings = true;
 		}
 
