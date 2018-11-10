@@ -14,8 +14,8 @@ namespace SmartLife
 	/// </summary>
 	public class WallPlug : IPowerPlug, IPowerMeasure, ILedRing
 	{
-		public event EventHandler<IReport> StateChanged;
-		public event EventHandler<IMeasurementReport> PowerMeasurementTaken;
+		public event EventHandler<SensorReport> StateChanged;
+		public event EventHandler<MeasurementReport<float>> PowerMeasurementTaken;
 
 		private readonly Node _node;
 

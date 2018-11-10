@@ -4,7 +4,7 @@ namespace SmartLife.Interfaces
 {
 	public interface ITemperatureMeasure : IMeasure
 	{
-		event EventHandler<IMeasurementReport> TemperatureMeasurementTaken;
+		event EventHandler<MeasurementReport<float>> TemperatureMeasurementTaken;
 	}
 	public class TemperatureMeasuredReport : MeasurementReport<float>
 	{

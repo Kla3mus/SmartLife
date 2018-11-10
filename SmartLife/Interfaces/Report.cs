@@ -1,22 +1,29 @@
 ﻿namespace SmartLife.Interfaces
 {
-	public interface IReport { }
-	public interface IReport<T> : IReport
+	public interface IReport<T> 
 	{
 		T Value { get; }
 	}
-	public interface IMeasurementReport : IReport
+
+	public abstract class SensorReport : IReport<bool>
 	{
-		ReportType Type { get; }
-		string Unit { get; }
+		protected SensorReport(ReportType reportType, bool value)
+		{
+			Value = value;
+			Type = reportType;
+		}
+		public bool Value { get; }
+		public ReportType Type { get; }
+		public override string ToString() { return $"{Type.ToString()} {Value}"; }
 	}
 
-	public abstract class MeasurementReport<T> : IMeasurementReport
+	public abstract class MeasurementReport<T> : IReport<T>
 	{
 		protected MeasurementReport(ReportType type, T value, string unit)
 		{
 			Value = value;
 			Unit  = unit;
+			Type = type;
 		}
 
 		public ReportType Type { get; }
@@ -25,6 +32,6 @@
 
 		public override string ToString() { return $"{Type.ToString()} {Value} {Unit}"; }
 	}
-	public enum ReportType { Lux, Power, Temperature, Humidity, Vibration, Motion, UV }
+	public enum ReportType { Lux, Power, Temperature, Humidity, Vibration, Motion, UV, State }
 
 }

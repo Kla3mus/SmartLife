@@ -4,7 +4,7 @@ namespace SmartLife.Interfaces
 {
 	public interface IPowerMeasure : IMeasure
 	{
-		event EventHandler<IMeasurementReport> PowerMeasurementTaken;
+		event EventHandler<MeasurementReport<float>> PowerMeasurementTaken;
 	}
 
 	public class PowerMeasureMeasurementReport : MeasurementReport<float>

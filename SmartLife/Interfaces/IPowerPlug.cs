@@ -9,12 +9,11 @@ namespace SmartLife.Interfaces
 
 	public interface IStateChange : IDivice
 	{
-		event EventHandler<IReport> StateChanged;
+		event EventHandler<SensorReport> StateChanged;
 	}
 
-	public class StateChangeReport: IReport<bool>
+	public class StateChangeReport : SensorReport
 	{
-		public StateChangeReport(bool value) { Value = value; }
-		public bool Value { get; }
+		public StateChangeReport(bool value) : base(ReportType.State, value) { }
 	}
 }

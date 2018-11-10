@@ -4,7 +4,7 @@ namespace SmartLife.Interfaces
 {
 	public interface IUvMeasure : IMeasure
 	{
-		event EventHandler<IMeasurementReport> UVMeasurementTaken;
+		event EventHandler<MeasurementReport<float>> UVMeasurementTaken;
 	}
 	public class UVMeasureReport : MeasurementReport<float>
 	{

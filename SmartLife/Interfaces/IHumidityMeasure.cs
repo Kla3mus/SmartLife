@@ -4,7 +4,7 @@ namespace SmartLife.Interfaces
 {
 	public interface IHumidityMeasure : IMeasure
 	{
-		event EventHandler<IMeasurementReport> HumidityMeasurementTaken;
+		event EventHandler<MeasurementReport<float>> HumidityMeasurementTaken;
 	}
 	public class HumidityMeasureReport : MeasurementReport<float>
 	{

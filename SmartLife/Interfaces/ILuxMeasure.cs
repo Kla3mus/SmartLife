@@ -4,7 +4,7 @@ namespace SmartLife.Interfaces
 {
 	public interface ILuxMeasure : IMeasure
 	{
-		event EventHandler<IMeasurementReport> LuxMeasurementTaken;
+		event EventHandler<MeasurementReport<float>> LuxMeasurementTaken;
 	}
 
 	public class LuxMeasureReport : MeasurementReport<float>

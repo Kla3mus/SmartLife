@@ -47,7 +47,18 @@ namespace SmartLife_Console
 				if (protocolInfo.GenericType == GenericType.SwitchBinary)
 					_devices.Add(new WallPlug(node));
 				if (protocolInfo.GenericType == GenericType.SensorMultiLevel)
-					_devices.Add(new MultiSensor6(node));
+				{
+					var multi = new MultiSensor6(node);
+
+					var multiSettings = multi.Settings;
+					multiSettings.GetUpdatedSettings();
+
+					multiSettings.MotionSensorUpdateTime = new TimeSpan(0,0,10);
+
+					multiSettings.ApplyChanges();
+
+					_devices.Add(multi);
+				}
 			}
 
 			return true;
@@ -76,6 +87,12 @@ namespace SmartLife_Console
 
 				if ((device is IHumidityMeasure))
 					((IHumidityMeasure)device).HumidityMeasurementTaken += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}"); };
+
+				if ((device is IVibrationSensor))
+					((IVibrationSensor)device).VibrationSensorTriggered += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}"); };
+
+				if ((device is IMotionSensor))
+					((IMotionSensor)device).MotionSensorTriggered += (sender, b) => { Console.WriteLine($"{((IDivice)sender).DeviceId} -> {b}"); };
 			}
 
 			ChangeState();
@@ -134,12 +151,6 @@ namespace SmartLife_Console
 				var d = (IPowerPlug)device;
 				d.Switch(state);
 				isOn = state;
-
-				/*
-				var l = (ILedRing)device;
-				l.SetDisabledColor(DisabledLedRingColor.Red);
-				l.SetEnabledColor(EnabledLedRingColor.Green);
-				*/
 			}
 		}
 	}
