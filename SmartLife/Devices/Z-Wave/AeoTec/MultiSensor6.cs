@@ -83,6 +83,11 @@ namespace SmartLife.Devices.Z_Wave.AeoTec
 					                                                                       MotionSensorReport(isDetected
 						                                                                                          .Value));
 			                                         };
+
+
+			var rep = node.GetCommandClass<ManufacturerSpecific>().Get();
+			rep.Wait();
+			var s = rep.Result;
 		}
 
 		public MultiSensor6Settings Settings { get; }

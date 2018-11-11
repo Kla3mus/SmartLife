@@ -9,7 +9,9 @@
     <Import_RootNamespace>SmartLife</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FileStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHumidityMeasure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ILedRing.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ILuxMeasure.cs" />
@@ -20,6 +22,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ITemperatureMeasure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IUvMeasure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Report.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SmartLife.cs" />
   </ItemGroup>
   <ItemGroup>

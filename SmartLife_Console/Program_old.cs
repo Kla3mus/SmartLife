@@ -11,10 +11,10 @@ using ZWave;
 
 namespace SmartLife_Console
 {
-	class Program
+	class Program_old
 	{
 		private readonly ZWaveController _controller;
-		public Program()
+		public Program_old()
 		{
 			var portName = SerialPortStream.GetPortNames().First(element => element != "COM1");
 

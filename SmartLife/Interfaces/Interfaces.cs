@@ -2,15 +2,15 @@
 
 namespace SmartLife.Interfaces
 {
-	public interface IDivice
+	public interface IDevice
 	{
 		string DeviceId { get; }
 
 	}
 
-	public interface IMeasure : IDivice { }
+	public interface IMeasure : IDevice { }
 
-	public interface ISensor : IDivice { }
+	public interface ISensor : IDevice { }
 
 	public interface IVibrationSensor : ISensor
 	{
@@ -22,7 +22,7 @@ namespace SmartLife.Interfaces
 		public VibrationSensorReport(bool value) : base(ReportType.Vibration, value) { }
 	}
 
-	public interface IMotionSensor : IDivice
+	public interface IMotionSensor : IDevice
 	{
 		event EventHandler<SensorReport> MotionSensorTriggered;
 	}

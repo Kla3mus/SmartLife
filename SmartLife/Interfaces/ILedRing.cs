@@ -2,7 +2,7 @@
 
 namespace SmartLife.Interfaces
 {
-	public interface ILedRing : IDivice
+	public interface ILedRing : IDevice
 	{
 		void SetEnabledColor(EnabledLedRingColor color);
 		void SetDisabledColor(DisabledLedRingColor color);

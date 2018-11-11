@@ -7,7 +7,7 @@ namespace SmartLife.Interfaces
 		void Switch(bool state);
 	}
 
-	public interface IStateChange : IDivice
+	public interface IStateChange : IDevice
 	{
 		event EventHandler<SensorReport> StateChanged;
 	}

@@ -24,6 +24,7 @@ namespace SmartLife
 			_node                                        =  node;
 			node.GetCommandClass<SwitchBinary>().Changed += (sender, args) => { StateChanged?.Invoke(this, new StateChangeReport(args.Report.Value)); };
 			node.GetCommandClass<Meter>().Changed += (sender, args) => { PowerMeasurementTaken?.Invoke(this, new PowerMeasureMeasurementReport(args.Report.Value, args.Report.Unit)); };
+			
 		}
 
 		public async void SetEnabledColor(EnabledLedRingColor color)
