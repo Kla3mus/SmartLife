@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using SmartLife.Devices.Z_Wave.AeoTec;
 using SmartLife.Interfaces;
 using ZWave;
 using ZWave.CommandClasses;
@@ -24,12 +23,11 @@ namespace SmartLife
 					return new WallPlug(_msr.Node);
 
 				if (_msr.ProductID == 100 && _msr.ManufacturerID == 134 && _msr.ProductType == 2)
-					return new WallPlug(_msr.Node);
+					return new MultiSensor6(_msr.Node);
 
 				return null;
 			}
 		}
-
 	}
 
 	public class DeviceFactory

@@ -24,7 +24,6 @@ namespace SmartLife
 			_node                                        =  node;
 			node.GetCommandClass<SwitchBinary>().Changed += (sender, args) => { StateChanged?.Invoke(this, new StateChangeReport(args.Report.Value)); };
 			node.GetCommandClass<Meter>().Changed += (sender, args) => { PowerMeasurementTaken?.Invoke(this, new PowerMeasureMeasurementReport(args.Report.Value, args.Report.Unit)); };
-			
 		}
 
 		public async void SetEnabledColor(EnabledLedRingColor color)
@@ -53,6 +52,6 @@ namespace SmartLife
 
 		public async void Switch(bool state) { await _node.GetCommandClass<SwitchBinary>().Set(state); }
 
-		public string DeviceId => $"Z-Wave #{_node.NodeID}";
+		public string DeviceId => $"Z-Wave #{_node.NodeID} Fibaro WallPlug";
 	}
 }

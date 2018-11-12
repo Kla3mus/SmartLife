@@ -5,7 +5,6 @@ namespace SmartLife.Interfaces
 	public interface IDevice
 	{
 		string DeviceId { get; }
-
 	}
 
 	public interface IMeasure : IDevice { }
@@ -30,5 +29,10 @@ namespace SmartLife.Interfaces
 	public class MotionSensorReport : SensorReport
 	{
 		public MotionSensorReport(bool value) : base(ReportType.Motion, value) { }
+	}
+	public interface IOperation
+	{
+		void Attach();
+		void Detach();
 	}
 }

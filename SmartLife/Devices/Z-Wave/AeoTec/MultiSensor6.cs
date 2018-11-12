@@ -83,11 +83,6 @@ namespace SmartLife.Devices.Z_Wave.AeoTec
 					                                                                       MotionSensorReport(isDetected
 						                                                                                          .Value));
 			                                         };
-
-
-			var rep = node.GetCommandClass<ManufacturerSpecific>().Get();
-			rep.Wait();
-			var s = rep.Result;
 		}
 
 		public MultiSensor6Settings Settings { get; }
@@ -96,7 +91,7 @@ namespace SmartLife.Devices.Z_Wave.AeoTec
 		public event EventHandler<SensorReport> MotionSensorTriggered;
 		public event EventHandler<MeasurementReport<float>> TemperatureMeasurementTaken;
 
-		public string DeviceId => $"Z-Wave #{_node.NodeID}";
+		public string DeviceId => $"Z-Wave #{_node.NodeID} MultiSensor6";
 		public event EventHandler<MeasurementReport<float>> UVMeasurementTaken;
 
 		public event EventHandler<SensorReport> VibrationSensorTriggered;

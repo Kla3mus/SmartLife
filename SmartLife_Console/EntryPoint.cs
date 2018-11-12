@@ -1,12 +1,14 @@
-﻿namespace SmartLife_Console
+﻿using System;
+
+namespace SmartLife_Console
 {
 	public class EntryPoint
 	{
 		static void Main(string[] args)
 		{
 			var p = new Program();
-			p.GetDevices().Wait();
-			p.Run().Wait();
+			while (true)
+				Console.WriteLine(p.DoAction(Console.ReadLine()));
 		}
 	}
 }
