@@ -16,14 +16,19 @@ namespace SmartLife
 			if (File.Exists(_fileName))
 				File.Delete(_fileName);
 
-			File.WriteAllText(_fileName, JsonConvert.SerializeObject(data));
+			File.WriteAllText(_fileName, JsonConvert.SerializeObject(data, new JsonSerializerSettings
+			                                                               {
+																			   Formatting = Formatting.Indented
+			                                                               }));
 		}
 
 		public IEnumerable<T> Get()
 		{
+			if (!File.Exists(_fileName))
+				return null;
+			
 			var text = File.ReadAllText(_fileName);
-			Newtonsoft.Json.Linq.JArray jsonResponse = JsonConvert.DeserializeObject(text) as Newtonsoft.Json.Linq.JArray;
-			return jsonResponse.ToObject<List<T>>();
+			return JsonConvert.DeserializeObject<List<T>>(text);
 		}
 	}
 }

@@ -15,6 +15,7 @@ namespace SmartLife
 		{
 			Operations = new List<IOperation>();
 			_deviceWrapperStorage = deviceWrapperStorage;
+
 			//We're gong to change this in the future, when we add support for more frameworks
 			if (string.IsNullOrEmpty(portName))
 				portName = SerialPortStream.GetPortNames().First(element => element != "COM1");
@@ -32,17 +33,25 @@ namespace SmartLife
 		}
 
 		public IEnumerable<IDevice> Devices { get; }
-		private IEnumerable<DeviceWrapper> deviceWrappers;
 
 		public void SaveDeviceWrappers()
 		{
 			_deviceWrapperStorage?.Save(DeviceWrappers);
 		}
 
-		public IDictionary<string, List<DeviceWrapper>> Zones =>
-			deviceWrappers.GroupBy(x => x.Zone)
-			              .ToDictionary(x => x.Key, y => y.ToList());
+		public IDictionary<string, List<DeviceWrapper>> Zones 
+		{
+			get
+			{
+				var result = new Dictionary<string, List<DeviceWrapper>>();
+				foreach (var zone in DeviceWrappers.SelectMany(x => x.Zones).Distinct())
+					result.Add(zone, DeviceWrappers.Where(x => x.Zones.Any(y => x.Zones.Contains(y))).ToList());
 
+				return result;
+			}
+		}
+
+		private IEnumerable<DeviceWrapper> _deviceWrappers;
 		public IEnumerable<DeviceWrapper> DeviceWrappers
 		{
 			get
@@ -50,24 +59,26 @@ namespace SmartLife
 				if (_deviceWrapperStorage == null)
 					return Devices.Select(x => new DeviceWrapper(x));
 
-				if (deviceWrappers != null && !deviceWrappers.Any())
-					return deviceWrappers;
-
-				if ((deviceWrappers == null || !deviceWrappers.Any()) && Devices.Any())
-					return Devices.Select(x => new DeviceWrapper(x));
+				if (_deviceWrappers != null && !_deviceWrappers.Any())
+					return _deviceWrappers;
 
 				var deviceWrappersFromStorage = _deviceWrapperStorage.Get();
-				var result = new List<DeviceWrapper>();
 
+				if (deviceWrappersFromStorage == null && Devices.Any())
+					return Devices.Select(x => new DeviceWrapper(x));
+				
+				var result = new List<DeviceWrapper>();
 				foreach (var device in Devices)
 				{
-					var wrapper = deviceWrappersFromStorage.FirstOrDefault(x => x.Device.DeviceId == device.DeviceId);
-					if (deviceWrappersFromStorage.FirstOrDefault(x => x.Device.DeviceId == device.DeviceId) != null)
+					var wrapper = deviceWrappersFromStorage.FirstOrDefault(x => x.DeviceId == device.DeviceId);
+					if (wrapper != null)
 					{
 						result.Add(new DeviceWrapper(device)
 						           {
 									   Description = wrapper.Description,
-									   Name = wrapper.Name
+									   Name = wrapper.Name,
+									   Zones = wrapper.Zones,
+									   DeviceId = wrapper.DeviceId
 						           });
 
 					}
@@ -75,40 +86,37 @@ namespace SmartLife
 						result.Add(new DeviceWrapper(device));
 				}
 
-				deviceWrappers = result;
+				_deviceWrappers = result;
 				return result;
 			}
 		}
 
 
-		public IEnumerable<IOperation> Operations { get; }
+		public IList<IOperation> Operations { get; }
 
 		public void AddOperation(IOperation operation)
 		{
-			operation.Attach();
-			Operations.ToList().Add(operation);
+			Operations.Add(operation);
 		}
 	}
 
 	public class DeviceWrapper
 	{
-		public string Name { get; set; }
-		public string Description { get; set; }
-		public string Zone { get; set; }
+		public string Name { get; set; } = string.Empty;
+		public string Description { get; set; } = string.Empty;
+		public List<string> Zones { get; set; } = new List<string>();
 		public string DeviceId { get; set; }
 
 		public DeviceWrapper(IDevice device)
 		{
+			if (device == null)
+				return;
+
 			Device = device;
 			DeviceId = device.DeviceId;
 		}
 
 		[JsonIgnore]
 		public IDevice Device { get; }
-	}
-
-	public class Zone
-	{
-		public IEnumerable<IDevice> Devices { get; set; }
 	}
 }

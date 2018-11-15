@@ -1,39 +1,58 @@
-﻿using SmartLife.Interfaces;
+﻿using System.Collections.Generic;
+using SmartLife.Interfaces;
 
 namespace SmartLife_Console
 {
 	public class MotionSensorPowerPlug : IOperation
 	{
 		private readonly IMotionSensor _motionSensor;
-		private readonly IPowerPlug _powerPlug;
+		private readonly IList<IPowerPlug> _powerPlugs;
 
-		public MotionSensorPowerPlug(IMotionSensor motionSensor, IPowerPlug powerPlug)
+		private bool currentSocketState;
+
+		public MotionSensorPowerPlug(IMotionSensor motionSensor, IList<IPowerPlug> powerPlugs)
 		{
 			_motionSensor = motionSensor;
-			_powerPlug    = powerPlug;
-		}
+			_powerPlugs   = powerPlugs;
 
-		private bool isAttached = false;
-		public void Attach()
-		{
-			if (isAttached)
-				return;
+			Devices.Add(motionSensor);
+			foreach (var powerPlug in powerPlugs)
+			{
+				Devices.Add(powerPlug);
+				powerPlug.StateChanged += (sender, report) => { currentSocketState = report.Value; };
+			}
 
 			_motionSensor.MotionSensorTriggered += MotionSensorOnMotionSensorTriggered;
-			isAttached                          =  true;
 		}
-		public void Detach()
+
+		public bool IsActive { get; private set; }
+
+		public void Attach()
 		{
-			if (!isAttached)
+			if (IsActive)
 				return;
 
-			_motionSensor.MotionSensorTriggered -= MotionSensorOnMotionSensorTriggered;
-			isAttached = false;
+			IsActive = true;
+			if (currentSocketState != IsActive)
+				foreach (var powerPlug in _powerPlugs)
+					powerPlug.Switch(true);
 		}
+
+		public void Detach()
+		{
+			if (!IsActive)
+				return;
+
+			IsActive = false;
+		}
+
+		public IList<IDevice> Devices { get; } = new List<IDevice>();
 
 		private void MotionSensorOnMotionSensorTriggered(object sender, SensorReport e)
 		{
-			_powerPlug.Switch(e.Value);
+			if (IsActive)
+				foreach (var powerPlug in _powerPlugs)
+					powerPlug.Switch(e.Value);
 		}
 	}
 }
