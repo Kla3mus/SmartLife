@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using SmartLife.Devices;
 using SmartLife.Devices.Z_Wave.AeoTec;
+using SmartLife.Devices.Z_Wave.OOMI;
 using SmartLife.Interfaces;
 using ZWave;
 using ZWave.CommandClasses;
@@ -25,7 +27,10 @@ namespace SmartLife
 				if (_msr.ProductID == 100 && _msr.ManufacturerID == 134 && _msr.ProductType == 2)
 					return new MultiSensor6(_msr.Node);
 
-				return null;
+				if (_msr.ProductID == 98 && _msr.ManufacturerID == 362 && _msr.ProductType == 3)
+					return new Bulb(_msr.Node);
+
+				return new UnknownDevice(_msr.Node);
 			}
 		}
 	}

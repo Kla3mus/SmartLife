@@ -1,35 +1,72 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
 using RJCP.IO.Ports;
 using SmartLife.Interfaces;
 using ZWave;
 
 namespace SmartLife
 {
+
+	public interface ILogger
+	{
+		void Log(string s);
+	}
+
+
 	public class SmartLife
 	{
+		private ILogger _logger;
+
 		readonly IStorage<DeviceWrapper> _deviceWrapperStorage;
-		public SmartLife(IStorage<DeviceWrapper> deviceWrapperStorage = null, string portName = null)
+		public SmartLife(ILogger logger, IStorage<DeviceWrapper> deviceWrapperStorage = null, string portName = null)
 		{
 			Operations = new List<IOperation>();
+			_logger = logger;
 			_deviceWrapperStorage = deviceWrapperStorage;
 
 			//We're gong to change this in the future, when we add support for more frameworks
 			if (string.IsNullOrEmpty(portName))
 				portName = SerialPortStream.GetPortNames().First(element => element != "COM1");
 
+			logger.Log($"Starting Smartlife using {portName}");
+
 			var controller = new ZWaveController(portName);
-			controller.ChannelClosed += (sender, args) => { Console.WriteLine($"ChannelClosed {args}"); };
-			controller.Error += (sender, args) => { Console.WriteLine($"Error {args.Error.Message}"); };
+			controller.ChannelClosed += (sender, args) => { logger.Log($"ChannelClosed {args}"); };
+			controller.Error += (sender, args) => { logger.Log($"Error {args.Error.Message}"); };
 			controller.Open();
 
 			var nodes = controller.GetNodes();
 			nodes.Wait();
+			logger.Log($"Found {nodes.Result.Count() - 1} nodes");
 
 			var deviceFactory = new DeviceFactory(nodes.Result.Where(x => x.NodeID != 001).ToList());
 			Devices = deviceFactory.Devices;
+
+			EventLogging();
+		}
+
+		private void EventLogging()
+		{
+			foreach (var deviceWrapper in DeviceWrappers)
+			{
+				var device = deviceWrapper.Device;
+
+				if (device is IPowerPlug)
+					((IPowerPlug)device).StateChanged += (sender, report) => { _logger.Log($"{device.DeviceId} IPowerPlug {report.Value}"); };
+
+				if (device is ITemperatureMeasure)
+					((ITemperatureMeasure)device).TemperatureMeasurementTaken += (sender, report) => { _logger.Log($"{device.DeviceId} ITemperatureMeasure {report.Value} {report.Unit}"); };
+
+				if (device is IMotionSensor)
+					((IMotionSensor)device).MotionSensorTriggered += (sender, report) => { _logger.Log($"{device.DeviceId} IMotionSensor {report.Value}"); };
+
+				if (device is IPowerMeasure)
+					((IPowerMeasure)device).PowerMeasurementTaken += (sender, report) => { _logger.Log($"{device.DeviceId} IPowerMeasure {report.Value} {report.Unit}"); };
+
+				if (device is ILuxMeasure)
+					((ILuxMeasure)device).LuxMeasurementTaken += (sender, report) => { _logger.Log($"{device.DeviceId} ILuxMeasure {report.Value} {report.Unit}"); };
+			}
 		}
 
 		public IEnumerable<IDevice> Devices { get; }
@@ -98,25 +135,5 @@ namespace SmartLife
 		{
 			Operations.Add(operation);
 		}
-	}
-
-	public class DeviceWrapper
-	{
-		public string Name { get; set; } = string.Empty;
-		public string Description { get; set; } = string.Empty;
-		public List<string> Zones { get; set; } = new List<string>();
-		public string DeviceId { get; set; }
-
-		public DeviceWrapper(IDevice device)
-		{
-			if (device == null)
-				return;
-
-			Device = device;
-			DeviceId = device.DeviceId;
-		}
-
-		[JsonIgnore]
-		public IDevice Device { get; }
 	}
 }

@@ -10,7 +10,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)DeviceFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\UnknownDevice.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\OOMI\Bulb.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DeviceWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHumidityMeasure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ILedRing.cs" />
@@ -33,5 +36,7 @@
     <None Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6 ES - MultiSensor 6 V1.08.pdf" />
     <None Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6 ES - MultiSensor 6 V1.11 EU ONLY.pdf" />
     <None Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\Fibaro\WallPlug FGWPEF-102-EN-A-v2.1.pdf" />
+    <None Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\OOMI\Bulb manual.pdf" />
+    <None Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\OOMI\Oomi Bulb manual.pdf" />
   </ItemGroup>
 </Project>

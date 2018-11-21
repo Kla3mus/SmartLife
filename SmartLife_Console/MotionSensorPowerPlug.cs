@@ -5,24 +5,22 @@ namespace SmartLife_Console
 {
 	public class MotionSensorPowerPlug : IOperation
 	{
-		private readonly IMotionSensor _motionSensor;
 		private readonly IList<IPowerPlug> _powerPlugs;
 
-		private bool currentSocketState;
+		private bool _currentSocketState;
 
 		public MotionSensorPowerPlug(IMotionSensor motionSensor, IList<IPowerPlug> powerPlugs)
 		{
-			_motionSensor = motionSensor;
 			_powerPlugs   = powerPlugs;
 
 			Devices.Add(motionSensor);
 			foreach (var powerPlug in powerPlugs)
 			{
 				Devices.Add(powerPlug);
-				powerPlug.StateChanged += (sender, report) => { currentSocketState = report.Value; };
+				powerPlug.StateChanged += (sender, report) => { _currentSocketState = report.Value; };
 			}
 
-			_motionSensor.MotionSensorTriggered += MotionSensorOnMotionSensorTriggered;
+			motionSensor.MotionSensorTriggered += MotionSensorOnMotionSensorTriggered;
 		}
 
 		public bool IsActive { get; private set; }
@@ -33,7 +31,7 @@ namespace SmartLife_Console
 				return;
 
 			IsActive = true;
-			if (currentSocketState != IsActive)
+			if (_currentSocketState != IsActive)
 				foreach (var powerPlug in _powerPlugs)
 					powerPlug.Switch(true);
 		}
