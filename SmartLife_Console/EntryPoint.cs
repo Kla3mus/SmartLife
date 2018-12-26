@@ -6,9 +6,10 @@ namespace SmartLife_Console
 	{
 		static void Main(string[] args)
 		{
-			var p = new Program();
+			var logger = new ConsoleLogger();
+			var p = new Program(logger);
 			while (true)
-				Console.WriteLine(p.DoAction(Console.ReadLine()));
+				logger.Log(p.DoAction(Console.ReadLine()));
 		}
 	}
 }

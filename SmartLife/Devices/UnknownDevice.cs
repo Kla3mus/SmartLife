@@ -5,13 +5,13 @@ namespace SmartLife.Devices
 {
 	public class UnknownDevice : IDevice
 	{
-		private Node node;
-
-		public UnknownDevice(Node node)
-		{
-			this.node = node;
-		}
-
-		public string DeviceId => $"Z-Wave #{node.NodeID} Unknown";
+		protected readonly Node Node;
+		public UnknownDevice(Node node) { Node = node; }
+		public virtual string DeviceId => $"Z-Wave #{Node.NodeID} Unknown";
+	}
+	public class UnResponsiveDevice : UnknownDevice
+	{
+		public override string DeviceId => $"Z-Wave #{Node.NodeID} UnResponsive";
+		public UnResponsiveDevice(Node node) : base(node) { }
 	}
 }

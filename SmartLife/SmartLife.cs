@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using RJCP.IO.Ports;
+using SmartLife.Devices;
 using SmartLife.Interfaces;
 using ZWave;
 
 namespace SmartLife
 {
-
 	public interface ILogger
 	{
 		void Log(string s);
 	}
 
-
 	public class SmartLife
 	{
-		private ILogger _logger;
+		private readonly ILogger _logger;
 
 		readonly IStorage<DeviceWrapper> _deviceWrapperStorage;
 		public SmartLife(ILogger logger, IStorage<DeviceWrapper> deviceWrapperStorage = null, string portName = null)
 		{
+			logger.Log("Initializing Smartlife");
 			Operations = new List<IOperation>();
 			_logger = logger;
 			_deviceWrapperStorage = deviceWrapperStorage;
@@ -38,12 +37,17 @@ namespace SmartLife
 
 			var nodes = controller.GetNodes();
 			nodes.Wait();
-			logger.Log($"Found {nodes.Result.Count() - 1} nodes");
-
 			var deviceFactory = new DeviceFactory(nodes.Result.Where(x => x.NodeID != 001).ToList());
 			Devices = deviceFactory.Devices;
 
+			foreach (var device in Devices.Where(x => x is UnknownDevice))
+				logger.Log($"{device.DeviceId} is unknown");
+
+			foreach (var device in Devices.Where(x => x is UnResponsiveDevice))
+				logger.Log($"{device.DeviceId} is unresponsive");
+
 			EventLogging();
+			logger.Log("Smartlife Initialized");
 		}
 
 		private void EventLogging()
