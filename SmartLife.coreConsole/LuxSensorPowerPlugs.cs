@@ -2,7 +2,7 @@
 using System.Linq;
 using SmartLife.Interfaces;
 
-namespace SmartLife.net.Demo
+namespace SmartLife.core.Demo
 {
 	public class LuxSensorPowerPlugs : IOperation
 	{

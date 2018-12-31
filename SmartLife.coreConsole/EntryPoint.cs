@@ -1,4 +1,6 @@
-﻿namespace SmartLife.net.Demo
+﻿using System;
+
+namespace SmartLife.core.Demo
 {
 	public class EntryPoint
 	{
@@ -7,7 +9,8 @@
 			var logger = new ConsoleLogger();
 			var p = new Program(logger);
 			while (true)
-				logger.Log(p.DoAction(System.Console.ReadLine()));
+				logger.Log(p.DoAction(Console.ReadLine()));
+
 		}
 	}
 }

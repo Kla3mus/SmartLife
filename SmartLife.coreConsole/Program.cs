@@ -5,14 +5,14 @@ using System.Threading;
 using SmartLife.Devices;
 using SmartLife.Interfaces;
 
-namespace SmartLife.net.Demo
+namespace SmartLife.core.Demo
 {
 
 	public class ConsoleLogger : ILogger
 	{
 		public void Log(string s)
 		{
-			System.Console.WriteLine($"{DateTime.Now} {s}");
+			Console.WriteLine($"{DateTime.Now} {s}");
 		}
 	}
 
@@ -33,7 +33,8 @@ namespace SmartLife.net.Demo
 			var powerPlug = zone.FirstOrDefault(x => x is IPowerPlug);
 			var motionSensor = zone.FirstOrDefault(x => x is IMotionSensor);
 
-			if (powerPlug != null && motionSensor != null) { 
+			if (powerPlug != null && motionSensor != null)
+			{
 				_smartHub.AddOperation(new MotionSensorPowerPlug((IMotionSensor)motionSensor, new List<IPowerPlug> { (IPowerPlug)powerPlug }));
 
 				var plugs = _smartHub.DeviceWrappers.Where(x => !x.Zones.Any()).Where(x => x is ILedRing).Select(x => (IPowerPlug)x.Device).ToList();
@@ -59,9 +60,9 @@ namespace SmartLife.net.Demo
 				{
 					var warmWhite = byte.Parse(array[1]);
 					var coldWhite = byte.Parse(array[2]);
-					var red       = byte.Parse(array[3]);
-					var green     = byte.Parse(array[4]);
-					var blue      = byte.Parse(array[5]);
+					var red = byte.Parse(array[3]);
+					var green = byte.Parse(array[4]);
+					var blue = byte.Parse(array[5]);
 
 					foreach (var colorLight in _bulbs)
 						colorLight.SetColor(warmWhite, coldWhite, red, green, blue);
@@ -139,7 +140,7 @@ namespace SmartLife.net.Demo
 				}
 			}
 
-			red   = 0;
+			red = 0;
 			green = 0;
 			blue = 255;
 			foreach (var colorLight in _bulbs)
@@ -155,7 +156,7 @@ namespace SmartLife.net.Demo
 			ChangeValue(ref green, true);
 			ChangeValue(ref red, false);
 			ChangeValue(ref blue, true);
-						 
+
 			ChangeValue(ref green, false);
 			ChangeValue(ref red, true);
 			ChangeValue(ref blue, false);
@@ -187,7 +188,7 @@ namespace SmartLife.net.Demo
 
 				foreach (var colorLight in _bulbs)
 					colorLight.SetColor(warmWhite, coldWhite, red, green, blue);
-			
+
 				Thread.Sleep(10);
 			}
 		}

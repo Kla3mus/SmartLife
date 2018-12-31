@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{7C526E4C-9B45-48C2-A04E-EAF661A81F7F}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>SmartLife_Console</RootNamespace>
-    <AssemblyName>SmartLife_Console</AssemblyName>
+    <RootNamespace>SmartLife.net.Demo</RootNamespace>
+    <AssemblyName>SmartLife.net.Demo</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -140,7 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SmartLife.net\SmartLife.net.csproj">
-      <Project>{40a10d53-c003-40c2-bcb5-5ae216531e4e}</Project>
+      <Project>{40A10D53-C003-40C2-BCB5-5AE216531E4E}</Project>
       <Name>SmartLife.net</Name>
     </ProjectReference>
   </ItemGroup>

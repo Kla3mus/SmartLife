@@ -4,6 +4,7 @@ using RJCP.IO.Ports;
 using SmartLife.Devices;
 using SmartLife.Interfaces;
 using ZWave;
+using ZWave.Channel;
 
 namespace SmartLife
 {
@@ -30,7 +31,7 @@ namespace SmartLife
 
 			logger.Log($"Starting Smartlife using {portName}");
 
-			var controller = new ZWaveController(portName);
+			var controller = new ZWaveController(new SerialPort(portName));
 			controller.ChannelClosed += (sender, args) => { logger.Log($"ChannelClosed {args}"); };
 			controller.Error += (sender, args) => { logger.Log($"Error {args.Error.Message}"); };
 			controller.Open();

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SmartLife.Interfaces;
 
-namespace SmartLife.net.Demo
+namespace SmartLife.core.Demo
 {
 	public class MotionSensorPowerPlug : IOperation
 	{
