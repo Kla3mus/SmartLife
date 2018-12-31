@@ -19,29 +19,29 @@ namespace SmartLife_Console
 
 	public class Program
 	{
-		private readonly SmartLife.SmartLife _smartLife;
+		private readonly SmartHub _smartHub;
 		public Program(ConsoleLogger logger)
 		{
-			_smartLife = new SmartLife.SmartLife(logger, new FileStorage<DeviceWrapper>("DeviceWrappers.txt"));
+			_smartHub = new SmartHub(logger, new FileStorage<DeviceWrapper>("DeviceWrappers.txt"));
 
-			_smartLife.SaveDeviceWrappers();
+			_smartHub.SaveDeviceWrappers();
 
-			foreach (var smartLifeDeviceWrapper in _smartLife.DeviceWrappers.Where(x => x.Device is UnknownDevice))
+			foreach (var smartLifeDeviceWrapper in _smartHub.DeviceWrappers.Where(x => x.Device is UnknownDevice))
 				logger.Log($"Found a unknown device! {smartLifeDeviceWrapper.DeviceId} {smartLifeDeviceWrapper.Device}");
 
-			var zone = _smartLife.Zones.Where(x => x.Key == "#1").SelectMany(x => x.Value).Select(x => x.Device);
+			var zone = _smartHub.Zones.Where(x => x.Key == "#1").SelectMany(x => x.Value).Select(x => x.Device);
 
 			var powerPlug = zone.FirstOrDefault(x => x is IPowerPlug);
 			var motionSensor = zone.FirstOrDefault(x => x is IMotionSensor);
 
 			if (powerPlug != null && motionSensor != null) { 
-				_smartLife.AddOperation(new MotionSensorPowerPlug((IMotionSensor)motionSensor, new List<IPowerPlug> { (IPowerPlug)powerPlug }));
+				_smartHub.AddOperation(new MotionSensorPowerPlug((IMotionSensor)motionSensor, new List<IPowerPlug> { (IPowerPlug)powerPlug }));
 
-				var plugs = _smartLife.DeviceWrappers.Where(x => !x.Zones.Any()).Where(x => x is ILedRing).Select(x => (IPowerPlug)x.Device).ToList();
-				_smartLife.AddOperation(new LuxSensorPowerPlugs((ILuxMeasure)motionSensor, plugs));
+				var plugs = _smartHub.DeviceWrappers.Where(x => !x.Zones.Any()).Where(x => x is ILedRing).Select(x => (IPowerPlug)x.Device).ToList();
+				_smartHub.AddOperation(new LuxSensorPowerPlugs((ILuxMeasure)motionSensor, plugs));
 			}
 
-			var temp = _smartLife.DeviceWrappers.Select(x => x.Device).Where(x => x is IColorLight);
+			var temp = _smartHub.DeviceWrappers.Select(x => x.Device).Where(x => x is IColorLight);
 			foreach (var device in temp)
 				_bulbs.Add((IColorLight)device);
 		}
@@ -50,7 +50,7 @@ namespace SmartLife_Console
 
 		public string DoAction(string s)
 		{
-			var activeDevices = _smartLife.Operations.Where(x => x.IsActive).SelectMany(x => x.Devices);
+			var activeDevices = _smartHub.Operations.Where(x => x.IsActive).SelectMany(x => x.Devices);
 
 			var array = s.Split(' ');
 
@@ -75,27 +75,27 @@ namespace SmartLife_Console
 				switch (s)
 				{
 					case "0": //Off
-						foreach (IPowerPlug powerPlug in _smartLife.Devices.Where(x => x is IPowerPlug && activeDevices.All(y => x.DeviceId != y.DeviceId)))
+						foreach (IPowerPlug powerPlug in _smartHub.Devices.Where(x => x is IPowerPlug && activeDevices.All(y => x.DeviceId != y.DeviceId)))
 							powerPlug.Switch(false);
 
-						foreach (IDim powerPlug in _smartLife.Devices.Where(x => x is IDim && activeDevices.All(y => x.DeviceId != y.DeviceId)))
+						foreach (IDim powerPlug in _smartHub.Devices.Where(x => x is IDim && activeDevices.All(y => x.DeviceId != y.DeviceId)))
 							powerPlug.Dim(0);
 
 						return "turned off non active things";
 					case "1": //On
-						foreach (IPowerPlug powerPlug in _smartLife.Devices.Where(x => x is IPowerPlug && activeDevices.All(y => x.DeviceId != y.DeviceId)))
+						foreach (IPowerPlug powerPlug in _smartHub.Devices.Where(x => x is IPowerPlug && activeDevices.All(y => x.DeviceId != y.DeviceId)))
 							powerPlug.Switch(true);
 
-						foreach (IDim powerPlug in _smartLife.Devices.Where(x => x is IDim && activeDevices.All(y => x.DeviceId != y.DeviceId)))
+						foreach (IDim powerPlug in _smartHub.Devices.Where(x => x is IDim && activeDevices.All(y => x.DeviceId != y.DeviceId)))
 							powerPlug.Dim(99);
 
 						return "turned on non active things";
 					case "2":
-						foreach (var operation in _smartLife.Operations)
+						foreach (var operation in _smartHub.Operations)
 							operation.Attach();
 						return "attached operations";
 					case "3":
-						foreach (var operation in _smartLife.Operations)
+						foreach (var operation in _smartHub.Operations)
 							operation.Detach();
 						return "detached operations";
 					case "5":

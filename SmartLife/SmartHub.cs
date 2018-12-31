@@ -12,12 +12,12 @@ namespace SmartLife
 		void Log(string s);
 	}
 
-	public class SmartLife
+	public class SmartHub
 	{
 		private readonly ILogger _logger;
 
 		readonly IStorage<DeviceWrapper> _deviceWrapperStorage;
-		public SmartLife(ILogger logger, IStorage<DeviceWrapper> deviceWrapperStorage = null, string portName = null)
+		public SmartHub(ILogger logger, IStorage<DeviceWrapper> deviceWrapperStorage = null, string portName = null)
 		{
 			logger.Log("Initializing Smartlife");
 			Operations = new List<IOperation>();
