@@ -12,7 +12,7 @@ namespace SmartLife
 	///     Device: Wall Plub
 	///     Model: FGWPE/F-102 ZW5
 	/// </summary>
-	public class WallPlug : IPowerPlug, IPowerMeasure, ILedRing
+	public class WallPlug : Device, IPowerPlug, IPowerMeasure, ILedRing
 	{
 		public event EventHandler<SensorReport> StateChanged;
 		public event EventHandler<MeasurementReport<float>> PowerMeasurementTaken;
@@ -52,6 +52,6 @@ namespace SmartLife
 
 		public async void Switch(bool state) { await _node.GetCommandClass<SwitchBinary>().Set(state); }
 
-		public string DeviceId => $"Z-Wave #{_node.NodeID} Fibaro WallPlug";
+		public override string DeviceId => $"Z-Wave #{_node.NodeID} Fibaro WallPlug";
 	}
 }

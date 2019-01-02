@@ -1,11 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace SmartLife.Interfaces
 {
 	public interface IDevice
 	{
 		string DeviceId { get; }
+		List<string> Types { get; }
+	}
+
+	public abstract class Device : IDevice
+	{
+		public abstract string DeviceId { get; }
+
+		public List<string> Types => ((TypeInfo)GetType()).ImplementedInterfaces.Select(x => x.Name).ToList();
 	}
 
 	public interface IMeasure : IDevice { }

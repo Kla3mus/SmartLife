@@ -12,7 +12,7 @@ namespace SmartLife.Devices.Z_Wave.AeoTec
 	///     Device: MultiSensor 6 (Z-Wave Multisensor)
 	///     Model: ZW100-C
 	/// </summary>
-	public class MultiSensor6 : ITemperatureMeasure, IHumidityMeasure, IUvMeasure, ILuxMeasure, IVibrationSensor, IMotionSensor
+	public class MultiSensor6 : Device, ITemperatureMeasure, IHumidityMeasure, IUvMeasure, ILuxMeasure, IVibrationSensor, IMotionSensor
 	{
 		private readonly Node _node;
 
@@ -85,7 +85,7 @@ namespace SmartLife.Devices.Z_Wave.AeoTec
 
 		public MultiSensor6Settings Settings { get; }
 
-		public string DeviceId => $"Z-Wave #{_node.NodeID} MultiSensor6";
+		public override string DeviceId => $"Z-Wave #{_node.NodeID} MultiSensor6";
 		public event EventHandler<MeasurementReport<float>> UVMeasurementTaken;
 		public event EventHandler<MeasurementReport<float>> HumidityMeasurementTaken;
 		public event EventHandler<MeasurementReport<float>> LuxMeasurementTaken;

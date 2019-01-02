@@ -3,12 +3,13 @@ using ZWave;
 
 namespace SmartLife.Devices
 {
-	public class UnknownDevice : IDevice
+	public class UnknownDevice : Device, IDevice
 	{
 		protected readonly Node Node;
 		public UnknownDevice(Node node) { Node = node; }
-		public virtual string DeviceId => $"Z-Wave #{Node.NodeID} Unknown";
+		public override string DeviceId => $"Z-Wave #{Node.NodeID} Unknown";
 	}
+
 	public class UnResponsiveDevice : UnknownDevice
 	{
 		public override string DeviceId => $"Z-Wave #{Node.NodeID} UnResponsive";

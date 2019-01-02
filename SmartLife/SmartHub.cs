@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RJCP.IO.Ports;
 using SmartLife.Devices;
@@ -13,7 +14,7 @@ namespace SmartLife
 		void Log(string s);
 	}
 
-	public class SmartHub
+	public class SmartHub : IDisposable
 	{
 		private readonly ILogger _logger;
 
@@ -139,6 +140,11 @@ namespace SmartLife
 		public void AddOperation(IOperation operation)
 		{
 			Operations.Add(operation);
+		}
+
+		public void Dispose()
+		{
+			_logger.Log("Closing SmartLife");
 		}
 	}
 }
