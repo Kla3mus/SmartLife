@@ -85,7 +85,7 @@ namespace SmartLife.Devices.Z_Wave.AeoTec
 
 		public MultiSensor6Settings Settings { get; }
 
-		public override string DeviceId => $"Z-Wave #{_node.NodeID} MultiSensor6";
+		public override string DeviceId => $"Z-Wave_{_node.NodeID}_AoeTec_MultiSensor6";
 		public event EventHandler<MeasurementReport<float>> UVMeasurementTaken;
 		public event EventHandler<MeasurementReport<float>> HumidityMeasurementTaken;
 		public event EventHandler<MeasurementReport<float>> LuxMeasurementTaken;

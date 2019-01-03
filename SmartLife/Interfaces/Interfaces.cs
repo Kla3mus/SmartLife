@@ -15,7 +15,23 @@ namespace SmartLife.Interfaces
 	{
 		public abstract string DeviceId { get; }
 
-		public List<string> Types => ((TypeInfo)GetType()).ImplementedInterfaces.Select(x => x.Name).ToList();
+		public List<string> Types
+		{
+			get
+			{
+				var illegalInterfaces = new List<Type> {
+					                                       typeof(IDevice),
+														   typeof(IMeasure),
+					                                       typeof(ISensor),
+					                                       typeof(ILightSwitch),
+													   };
+
+				return ((TypeInfo)GetType()).ImplementedInterfaces
+				                               .Where(x => !illegalInterfaces.Contains(x))
+				                               .Select(x => x.Name)
+				                               .ToList();
+			}
+		}
 	}
 
 	public interface IMeasure : IDevice { }

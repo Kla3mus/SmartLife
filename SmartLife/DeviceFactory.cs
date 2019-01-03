@@ -41,6 +41,9 @@ namespace SmartLife
 				if (_msr.ProductID == 98 && _msr.ManufacturerID == 134 && _msr.ProductType == 3)
 					return new Devices.Z_Wave.AeoTec.Bulb(_msr.Node);
 
+				if (_msr.ProductID == 121 && _msr.ManufacturerID == 362 && _msr.ProductType == 3)
+					return new Devices.Z_Wave.OOMI.LedStrip(_msr.Node);
+
 				return new UnknownDevice(_msr.Node);
 			}
 		}

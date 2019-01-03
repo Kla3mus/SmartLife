@@ -15,6 +15,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6Settings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\OOMI\Bulb.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\OOMI\LedStrip.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDim.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeviceWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileStorage.cs" />

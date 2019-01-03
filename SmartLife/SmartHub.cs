@@ -17,39 +17,48 @@ namespace SmartLife
 	public class SmartHub : IDisposable
 	{
 		private readonly ILogger _logger;
+		private ZWaveController _controller;
+		private string ZWavePortName = null;
 
 		readonly IStorage<DeviceWrapper> _deviceWrapperStorage;
+
 		public SmartHub(ILogger logger, IStorage<DeviceWrapper> deviceWrapperStorage = null, string portName = null)
 		{
-			logger.Log("Initializing Smartlife");
-			Operations = new List<IOperation>();
+			ZWavePortName = portName;
 			_logger = logger;
+			_logger.Log("Initializing Smartlife");
+			Operations = new List<IOperation>();
 			_deviceWrapperStorage = deviceWrapperStorage;
 
+			Initialize();
+		}
+
+		private void Initialize()
+		{
 			//We're gong to change this in the future, when we add support for more frameworks
-			if (string.IsNullOrEmpty(portName))
-				portName = SerialPortStream.GetPortNames().First(element => element != "COM1");
+			if (string.IsNullOrEmpty(ZWavePortName))
+				ZWavePortName = SerialPortStream.GetPortNames().First(element => element != "COM1");
 
-			logger.Log($"Starting Smartlife using {portName}");
+			_logger.Log($"Starting Smartlife using {ZWavePortName}");
 
-			var controller = new ZWaveController(new SerialPort(portName));
-			controller.ChannelClosed += (sender, args) => { logger.Log($"ChannelClosed {args}"); };
-			controller.Error += (sender, args) => { logger.Log($"Error {args.Error.Message}"); };
-			controller.Open();
+			_controller =  new ZWaveController(new SerialPort(ZWavePortName));
+			_controller.ChannelClosed += (sender, args) => { _logger.Log($"ChannelClosed {args}"); };
+			_controller.Error         += (sender, args) => { _logger.Log($"Error {args.Error.Message}"); };
+			_controller.Open();
 
-			var nodes = controller.GetNodes();
+			var nodes = _controller.GetNodes();
 			nodes.Wait();
 			var deviceFactory = new DeviceFactory(nodes.Result.Where(x => x.NodeID != 001).ToList());
 			Devices = deviceFactory.Devices;
 
 			foreach (var device in Devices.Where(x => x is UnknownDevice))
-				logger.Log($"{device.DeviceId} is unknown");
+				_logger.Log($"{device.DeviceId} is unknown");
 
 			foreach (var device in Devices.Where(x => x is UnResponsiveDevice))
-				logger.Log($"{device.DeviceId} is unresponsive");
+				_logger.Log($"{device.DeviceId} is unresponsive");
 
 			EventLogging();
-			logger.Log("Smartlife Initialized");
+			_logger.Log("Smartlife Initialized");
 		}
 
 		private void EventLogging()
@@ -61,21 +70,30 @@ namespace SmartLife
 				if (device is IPowerPlug)
 					((IPowerPlug)device).StateChanged += (sender, report) => { _logger.Log($"{device.DeviceId} IPowerPlug {report.Value}"); };
 
+				if (device is IPowerMeasure)
+					((IPowerMeasure)device).PowerMeasurementTaken += (sender, report) => { _logger.Log($"{device.DeviceId} IPowerMeasure {report.Value} {report.Unit}"); };
+
 				if (device is ITemperatureMeasure)
 					((ITemperatureMeasure)device).TemperatureMeasurementTaken += (sender, report) => { _logger.Log($"{device.DeviceId} ITemperatureMeasure {report.Value} {report.Unit}"); };
 
 				if (device is IMotionSensor)
 					((IMotionSensor)device).MotionSensorTriggered += (sender, report) => { _logger.Log($"{device.DeviceId} IMotionSensor {report.Value}"); };
 
-				if (device is IPowerMeasure)
-					((IPowerMeasure)device).PowerMeasurementTaken += (sender, report) => { _logger.Log($"{device.DeviceId} IPowerMeasure {report.Value} {report.Unit}"); };
-
 				if (device is ILuxMeasure)
 					((ILuxMeasure)device).LuxMeasurementTaken += (sender, report) => { _logger.Log($"{device.DeviceId} ILuxMeasure {report.Value} {report.Unit}"); };
+
+				if (device is IUvMeasure)
+					((IUvMeasure)device).UVMeasurementTaken += (sender, report) => { _logger.Log($"{device.DeviceId} IUvMeasure {report.Value} {report.Unit}"); };
+
+				if (device is IHumidityMeasure)
+					((IHumidityMeasure)device).HumidityMeasurementTaken += (sender, report) => { _logger.Log($"{device.DeviceId} IHumidityMeasure {report.Value} {report.Unit}"); };
+
+				if (device is IVibrationSensor)
+					((IVibrationSensor)device).VibrationSensorTriggered += (sender, report) => { _logger.Log($"{device.DeviceId} IVibrationSensor {report.Value}"); };
 			}
 		}
 
-		public IEnumerable<IDevice> Devices { get; }
+		public IEnumerable<IDevice> Devices { get; private set; }
 
 		public void SaveDeviceWrappers()
 		{

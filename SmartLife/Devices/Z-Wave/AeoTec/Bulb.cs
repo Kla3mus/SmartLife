@@ -6,7 +6,7 @@ namespace SmartLife.Devices.Z_Wave.AeoTec
 	{
 		public Bulb(Node node) : base(node) { }
 
-		public override string DeviceId => $"Z-Wave #{Node.NodeID} AoeTec Led Bulb";
+		public override string DeviceId => $"Z-Wave_{Node.NodeID}_AoeTec_Led_Bulb";
 
 	}
 }

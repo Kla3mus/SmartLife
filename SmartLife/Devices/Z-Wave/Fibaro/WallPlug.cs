@@ -52,6 +52,6 @@ namespace SmartLife
 
 		public async void Switch(bool state) { await _node.GetCommandClass<SwitchBinary>().Set(state); }
 
-		public override string DeviceId => $"Z-Wave #{_node.NodeID} Fibaro WallPlug";
+		public override string DeviceId => $"Z-Wave_{_node.NodeID}_Fibaro_WallPlug";
 	}
 }

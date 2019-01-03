@@ -17,7 +17,7 @@ namespace SmartLife.Devices.Z_Wave.OOMI
 			_nbu = new RgbwLightBulb(node);
 		}
 
-		public override string DeviceId => $"Z-Wave #{Node.NodeID} OOMI Bulb";
+		public override string DeviceId => $"Z-Wave_{Node.NodeID}_OOMI_Bulb";
 
 		public void SetColor(byte warmWhite, byte coldWhite, byte red, byte green, byte blue)
 		{
