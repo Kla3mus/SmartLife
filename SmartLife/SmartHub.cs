@@ -13,6 +13,9 @@ namespace SmartLife
 
 		readonly IStorage<DeviceWrapper> _deviceWrapperStorage;
 
+		public SmartHub(ILogger logger, ISmartHouseFramework framework, IStorage<DeviceWrapper> deviceWrapperStorage = null) : 
+			this(logger, new List<ISmartHouseFramework> { framework }, deviceWrapperStorage) { }
+
 		public SmartHub(ILogger logger, IList<ISmartHouseFramework> frameworks, IStorage<DeviceWrapper> deviceWrapperStorage = null)
 		{
 			_logger = logger;
