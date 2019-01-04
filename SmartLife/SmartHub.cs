@@ -1,64 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using RJCP.IO.Ports;
-using SmartLife.Devices;
 using SmartLife.Interfaces;
 using ZWave;
-using ZWave.Channel;
 
 namespace SmartLife
 {
-	public interface ILogger
-	{
-		void Log(string s);
-	}
-
 	public class SmartHub : IDisposable
 	{
 		private readonly ILogger _logger;
 		private ZWaveController _controller;
-		private string ZWavePortName = null;
 
 		readonly IStorage<DeviceWrapper> _deviceWrapperStorage;
 
-		public SmartHub(ILogger logger, IStorage<DeviceWrapper> deviceWrapperStorage = null, string portName = null)
+		public SmartHub(ILogger logger, IList<ISmartHouseFramework> frameworks, IStorage<DeviceWrapper> deviceWrapperStorage = null)
 		{
-			ZWavePortName = portName;
 			_logger = logger;
 			_logger.Log("Initializing Smartlife");
 			Operations = new List<IOperation>();
+			Devices = new List<IDevice>();
 			_deviceWrapperStorage = deviceWrapperStorage;
 
-			Initialize();
-		}
-
-		private void Initialize()
-		{
-			//We're gong to change this in the future, when we add support for more frameworks
-			if (string.IsNullOrEmpty(ZWavePortName))
-				ZWavePortName = SerialPortStream.GetPortNames().First(element => element != "COM1");
-
-			_logger.Log($"Starting Smartlife using {ZWavePortName}");
-
-			_controller =  new ZWaveController(new SerialPort(ZWavePortName));
-			_controller.ChannelClosed += (sender, args) => { _logger.Log($"ChannelClosed {args}"); };
-			_controller.Error         += (sender, args) => { _logger.Log($"Error {args.Error.Message}"); };
-			_controller.Open();
-
-			var nodes = _controller.GetNodes();
-			nodes.Wait();
-			var deviceFactory = new DeviceFactory(nodes.Result.Where(x => x.NodeID != 001).ToList());
-			Devices = deviceFactory.Devices;
-
-			foreach (var device in Devices.Where(x => x is UnknownDevice))
-				_logger.Log($"{device.DeviceId} is unknown");
-
-			foreach (var device in Devices.Where(x => x is UnResponsiveDevice))
-				_logger.Log($"{device.DeviceId} is unresponsive");
+			foreach (var smartHouseFramework in frameworks)
+				Initialize(smartHouseFramework);
 
 			EventLogging();
 			_logger.Log("Smartlife Initialized");
+		}
+
+		private void Initialize(ISmartHouseFramework framework)
+		{
+			framework.Logged += (sender, log) => _logger.Log(log.Message);
+			framework.Start();
+
+			foreach (var device in framework.Devices)
+				Devices.Add(device);
 		}
 
 		private void EventLogging()
@@ -93,7 +69,7 @@ namespace SmartLife
 			}
 		}
 
-		public IEnumerable<IDevice> Devices { get; private set; }
+		public IList<IDevice> Devices { get; set; }
 
 		public void SaveDeviceWrappers()
 		{

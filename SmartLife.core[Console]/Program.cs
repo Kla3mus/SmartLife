@@ -21,7 +21,8 @@ namespace SmartLife.core.Demo
 		private readonly SmartHub _smartHub;
 		public Program(ConsoleLogger logger)
 		{
-			_smartHub = new SmartHub(logger, new FileStorage<DeviceWrapper>("DeviceWrappers.txt"));
+			ZWaveFramework zwave = new ZWaveFramework();
+			_smartHub = new SmartHub(logger, new List<ISmartHouseFramework> { zwave }, new FileStorage<DeviceWrapper>("DeviceWrappers.txt"));
 
 			_smartHub.SaveDeviceWrappers();
 
