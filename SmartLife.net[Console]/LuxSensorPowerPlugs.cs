@@ -6,12 +6,10 @@ namespace SmartLife.net.Demo
 {
 	public class LuxSensorPowerPlugs : IOperation
 	{
-		private readonly ILuxMeasure _luxMeasure;
 		private readonly List<IPowerPlug> _powerPlugs;
 
 		public LuxSensorPowerPlugs(ILuxMeasure luxMeasure, IList<IPowerPlug> powerPlugs)
 		{
-			_luxMeasure = luxMeasure;
 			_powerPlugs = powerPlugs.ToList();
 
 			Devices.Add(luxMeasure);

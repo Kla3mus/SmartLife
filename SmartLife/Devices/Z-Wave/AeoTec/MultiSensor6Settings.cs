@@ -3,80 +3,53 @@ using System.Threading.Tasks;
 using ZWave;
 using ZWave.CommandClasses;
 
-namespace SmartLife.Devices.Z_Wave.AeoTec
+namespace SmartLife.net.Devices.AeoTec
 {
-	public enum MotionSensorSensitivity
-	{
-		Minimum_0 = 0
-		, Low_1 = 1
-		, MediumLow_2 = 2
-		, MediumHigh_3 = 3
-		, High_4 = 4
-		, Maximum_5 = 5
-	}
-	public class MultiSensor6Settings
+	public class MultiSensor6Settings : ISettings
 	{
 		private readonly Node _node;
-		private TimeSpan? _originalMotionSensorUpdateTime;
-		private MotionSensorSensitivity _originalType;
 
-		private bool HasRunUpdateSettings;
-		public MultiSensor6Settings(Node node) { _node = node; }
+		public MotionSensorSettings MotionSensorSettings => new MotionSensorSettings(_node);
+		//public VibrationSensorSettings VibrationSensorSettings => new VibrationSensorSettings(_node);
+		//public TemperatureSensorSettings TemperatureSensorSettings => new TemperatureSensorSettings(_node);
+		//public LuxSensorSettings LuxSensorSettings => new LuxSensorSettings(_node);
+		//public UvSensorSettings UvSensorSettings => new UvSensorSettings(_node);
+		//public HumiditySensorSettings HumiditySensorSettings => new HumiditySensorSettings(_node);
 
-		public TimeSpan? MotionSensorUpdateTime { get; set; }
-
-		public MotionSensorSensitivity Type { get; set; }
-
-		public async void GetUpdatedSettings()
+		public MultiSensor6Settings(Node node)
 		{
-			await GetMotionSensorUpdateTime();
-			HasRunUpdateSettings = true;
+			_node = node;
+			GetUpdateTime().Wait();
 		}
+
+		private TimeSpan? _originalUpdateTime;
+
+		public TimeSpan? UpdateTime { get; set; }
 
 		public async void ApplyChanges()
 		{
-			if (!HasRunUpdateSettings)
-				return;
-
-			if (_originalMotionSensorUpdateTime != MotionSensorUpdateTime)
-				await SetMotionSensorUpdateTime();
+			if (_originalUpdateTime != UpdateTime)
+				await SetUpdateTime();
 		}
 
-		private async Task SetMotionSensorUpdateTime()
+		private async Task SetUpdateTime()
 		{
-			if (!MotionSensorUpdateTime.HasValue)
+			if (!UpdateTime.HasValue)
 				return;
 
-			int? value;
+			int? value = Convert.ToSByte(UpdateTime.Value.TotalSeconds);
 
-			if (MotionSensorUpdateTime.Value.TotalSeconds >= 10)
-				value = Convert.ToSByte(MotionSensorUpdateTime.Value.TotalSeconds);
-			else
-				value = 0xF0; //Will add support for this later..
-
-			if (!value.HasValue)
-				return;
-
-			await _node.GetCommandClass<Configuration>().Set(0x3, value.Value);
+			await _node.GetCommandClass<Configuration>().Set(0x6f, value.Value);
+			await _node.GetCommandClass<Configuration>().Set(0x70, value.Value);
+			await _node.GetCommandClass<Configuration>().Set(0x71, value.Value);
 		}
 
-		private async Task GetMotionSensorUpdateTime()
+		private async Task GetUpdateTime()
 		{
 			var command = _node.GetCommandClass<Configuration>();
-			var value   = Convert.ToInt16((await command.Get(3)).Value);
+			var reportGroup1   = Convert.ToInt16((await command.Get(0x6f)).Value);
 
-			if (value >= 10 && value <= 255) { _originalMotionSensorUpdateTime = new TimeSpan(0, 0, value); }
-
-			else if (value >= 256 && value <= 3600)
-			{
-				if (Math.DivRem(value, 60, out var result) == 0)
-					_originalMotionSensorUpdateTime = new TimeSpan(0, value, 0);
-				else
-					_originalMotionSensorUpdateTime = new TimeSpan(0, value + 1, 0);
-			}
-			else { _originalMotionSensorUpdateTime = null; }
-
-			MotionSensorUpdateTime = _originalMotionSensorUpdateTime;
+			_originalUpdateTime = UpdateTime = TimeSpan.FromSeconds(reportGroup1);
 		}
 	}
 }

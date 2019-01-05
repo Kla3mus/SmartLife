@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using SmartLife.Devices;
+using SmartLife.Devices.Z_Wave.AeoTec;
 using SmartLife.Interfaces;
 
 namespace SmartLife.net.Demo
@@ -18,20 +18,41 @@ namespace SmartLife.net.Demo
 
 	public class Program
 	{
-		private readonly SmartHub _smartHub;
+		private SmartHub _smartHub;
 		public Program(ConsoleLogger logger)
 		{
-			ZWaveFramework zwave = new ZWaveFramework();
+			Initialize(logger);
+
+			if (false)
+				ConfigureSensors();
+
+			DoStandard(logger);
+		}
+
+		private void ConfigureSensors()
+		{
+			var multiSensor = _smartHub.Devices.OfType<MultiSensor6>();
+			foreach (var device in multiSensor)
+			{
+				var deviceSettings = device.Settings;
+				deviceSettings.UpdateTime = TimeSpan.FromSeconds(30);
+				deviceSettings.ApplyChanges();
+			}
+		}
+
+		private void Initialize(ConsoleLogger logger)
+		{
+			var zwave = new ZWaveFramework();
 			_smartHub = new SmartHub(logger, new List<ISmartHouseFramework> { zwave }, new FileStorage<DeviceWrapper>("DeviceWrappers.txt"));
+		}
+
+		private void DoStandard(ConsoleLogger logger) {
 
 			_smartHub.SaveDeviceWrappers();
 
-			foreach (var smartLifeDeviceWrapper in _smartHub.DeviceWrappers.Where(x => x.Device is UnknownDevice))
-				logger.Log($"Found a unknown device! {smartLifeDeviceWrapper.DeviceId} {smartLifeDeviceWrapper.Device}");
-
 			var zone = _smartHub.Zones.Where(x => x.Key == "#1").SelectMany(x => x.Value).Select(x => x.Device);
 
-			var powerPlug = zone.FirstOrDefault(x => x is IPowerPlug);
+			var powerPlug    = zone.FirstOrDefault(x => x is IPowerPlug);
 			var motionSensor = zone.FirstOrDefault(x => x is IMotionSensor);
 
 			if (powerPlug != null && motionSensor != null)

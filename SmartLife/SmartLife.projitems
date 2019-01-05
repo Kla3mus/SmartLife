@@ -12,8 +12,16 @@
     <Compile Include="$(MSBuildThisFileDirectory)DeviceFactory.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\UnknownDevice.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\Bulb.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\HumiditySensorSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\ISettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\LuxSensorSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MotionSensorSensitivity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MotionSensorSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\MultiSensor6Settings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\TemperatureSensorSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\UvSensorSettings.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\AeoTec\VibrationSensorSettings.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\OOMI\Bulb.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\OOMI\LedStrip.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILogger.cs" />

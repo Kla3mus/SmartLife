@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using SmartLife.Interfaces;
+using SmartLife.net.Devices.AeoTec;
 using ZWave;
 using ZWave.CommandClasses;
 
