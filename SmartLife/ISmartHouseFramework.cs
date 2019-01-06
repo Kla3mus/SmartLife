@@ -4,7 +4,7 @@ using SmartLife.Interfaces;
 
 namespace SmartLife
 {
-	public interface ISmartHouseFramework
+	public interface ISmartHouseFramework : IDisposable
 	{
 		event EventHandler<Log> Logged;
 		void Start();

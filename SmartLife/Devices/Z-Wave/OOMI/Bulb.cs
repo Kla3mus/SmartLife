@@ -24,12 +24,10 @@ namespace SmartLife.Devices.Z_Wave.OOMI
 			_nbu.SetColor(warmWhite, coldWhite, red, green, blue);
 		}
 
-		public event EventHandler<SensorReport> StateChanged;
-
 		public async void Switch(bool state)
 		{
 			if (state)
-				await Node.GetCommandClass<Basic>().Set(0xFF);
+				await Node.GetCommandClass<Basic>().Set(0xFE);
 			else 
 				await Node.GetCommandClass<Basic>().Set(0x00);
 		}

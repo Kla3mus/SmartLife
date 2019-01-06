@@ -11,7 +11,7 @@ namespace SmartLife
 {
 	public class ZWaveFramework : ISmartHouseFramework
 	{
-		private readonly string ZWavePortName = null;
+		private readonly string ZWavePortName;
 		private ZWaveController _controller;
 		public ZWaveFramework(string port = "")
 		{
@@ -24,23 +24,36 @@ namespace SmartLife
 
 		public void Start()
 		{
-			Logged?.Invoke(this, new Log { Level = SmartLife.Log.LevelEnum.Debug, Message = "Initializing ZWaveController"});
 			_controller = new ZWaveController(new SerialPort(ZWavePortName));
-			_controller.ChannelClosed += (sender, args) => {
-				                             Logged?.Invoke(sender, new Log
-				                                                    {
-					                                                    Level   = SmartLife.Log.LevelEnum.Info,
-					                                                    Message = $"ZWaveController ChannelClosed {args}"
-				                                                    }); };
-			_controller.Error += (sender, args) => {
-				                     Logged?.Invoke(sender, new Log
-				                                            {
-					                                            Level     = SmartLife.Log.LevelEnum.Error,
-					                                            Exception = args.Error,
-					                                            Message   = $"ZWaveController Error {args.Error.Message}"
-				                                            }); };
+			_controller.ChannelClosed += LogChannelClosed;
+			_controller.Error += LogError;
 			_controller.Open();
-			Log(this, new Log { Level = SmartLife.Log.LevelEnum.Debug, Message = "Finished Initializing ZWaveController"});
+		}
+
+		public void Dispose()
+		{
+			_controller.ChannelClosed -= LogChannelClosed;
+			_controller.Error -= LogError;
+			_controller.Close();
+		}
+
+		private void LogError(object sender, ErrorEventArgs args)
+		{
+			Logged?.Invoke(sender, new Log
+			{
+				Level = SmartLife.Log.LevelEnum.Error,
+				Exception = args.Error,
+				Message = $"ZWaveController Error {args.Error.Message}"
+			});
+		}
+
+		private void LogChannelClosed(object sender, EventArgs args)
+		{
+			Logged?.Invoke(sender, new Log
+			{
+				Level = SmartLife.Log.LevelEnum.Info,
+				Message = $"ZWaveController ChannelClosed {args}"
+			});
 		}
 
 		private void Log(object obj, Log log)

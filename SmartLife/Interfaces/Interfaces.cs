@@ -23,7 +23,6 @@ namespace SmartLife.Interfaces
 					                                       typeof(IDevice),
 														   typeof(IMeasure),
 					                                       typeof(ISensor),
-					                                       typeof(ILightSwitch),
 													   };
 
 				return ((TypeInfo)GetType()).ImplementedInterfaces

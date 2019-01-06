@@ -2,11 +2,11 @@
 
 namespace SmartLife.Interfaces
 {
-	public interface ILightSwitch : IDevice
+	public interface ISwitch : IDevice
 	{
 		void Switch(bool state);
 	}
-	public interface IDim : ILightSwitch
+	public interface IDim : ISwitch
 	{
 		void Dim(int percent);
 	}

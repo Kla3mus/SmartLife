@@ -9,6 +9,7 @@ namespace SmartLife
 	public class SmartHub : IDisposable
 	{
 		private readonly ILogger _logger;
+		private readonly IList<ISmartHouseFramework> _frameworks;
 		private ZWaveController _controller;
 
 		readonly IStorage<DeviceWrapper> _deviceWrapperStorage;
@@ -19,6 +20,7 @@ namespace SmartLife
 		public SmartHub(ILogger logger, IList<ISmartHouseFramework> frameworks, IStorage<DeviceWrapper> deviceWrapperStorage = null)
 		{
 			_logger = logger;
+			_frameworks = frameworks;
 			_logger.Log("Initializing Smartlife");
 			Operations = new List<IOperation>();
 			Devices = new List<IDevice>();
@@ -30,14 +32,25 @@ namespace SmartLife
 			EventLogging();
 			_logger.Log("Smartlife Initialized");
 		}
+		public void Dispose()
+		{
+			_logger.Log("Disposing SmartLife");
 
+			foreach (var framework in _frameworks)
+				framework.Dispose();
+
+			_logger.Log("SmartLife Disposed");
+		}
 		private void Initialize(ISmartHouseFramework framework)
 		{
+			_logger.Log($"- starting {framework.GetType().Name}");
 			framework.Logged += (sender, log) => _logger.Log(log.Message);
 			framework.Start();
 
 			foreach (var device in framework.Devices)
 				Devices.Add(device);
+
+			_logger.Log($"- started {framework.GetType().Name}");
 		}
 
 		private void EventLogging()
@@ -46,8 +59,8 @@ namespace SmartLife
 			{
 				var device = deviceWrapper.Device;
 
-				if (device is IPowerPlug)
-					((IPowerPlug)device).StateChanged += (sender, report) => { _logger.Log($"{device.DeviceId} IPowerPlug {report.Value}"); };
+				if (device is IStateChange)
+					((IStateChange)device).StateChanged += (sender, report) => { _logger.Log($"{device.DeviceId} IStateChange {report.Value}"); };
 
 				if (device is IPowerMeasure)
 					((IPowerMeasure)device).PowerMeasurementTaken += (sender, report) => { _logger.Log($"{device.DeviceId} IPowerMeasure {report.Value} {report.Unit}"); };
@@ -139,9 +152,6 @@ namespace SmartLife
 			Operations.Add(operation);
 		}
 
-		public void Dispose()
-		{
-			_logger.Log("Closing SmartLife");
-		}
+
 	}
 }

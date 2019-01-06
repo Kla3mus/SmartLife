@@ -12,7 +12,7 @@ namespace SmartLife
 	///     Device: Wall Plub
 	///     Model: FGWPE/F-102 ZW5
 	/// </summary>
-	public class WallPlug : Device, IPowerPlug, IPowerMeasure, ILedRing
+	public class WallPlug : Device, ISwitch, IStateChange, IPowerMeasure, ILedRing
 	{
 		public event EventHandler<SensorReport> StateChanged;
 		public event EventHandler<MeasurementReport<float>> PowerMeasurementTaken;

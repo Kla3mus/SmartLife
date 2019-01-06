@@ -2,11 +2,6 @@
 
 namespace SmartLife.Interfaces
 {
-	public interface IPowerPlug : IStateChange
-	{
-		void Switch(bool state);
-	}
-
 	public interface IStateChange : IDevice
 	{
 		event EventHandler<SensorReport> StateChanged;
