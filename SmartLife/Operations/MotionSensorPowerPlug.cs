@@ -1,23 +1,29 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SmartLife.Interfaces;
 
 namespace SmartLife.core.Demo
 {
+
 	public class MotionSensorPowerPlug : IOperation
 	{
-		private readonly IList<IPowerPlug> _powerPlugs;
-
+		private readonly IList<ISwitch> _powerPlugs;
 		private bool _currentSocketState;
 
-		public MotionSensorPowerPlug(IMotionSensor motionSensor, IList<IPowerPlug> powerPlugs)
+		/// <summary>
+		///  If motion is noticed, switches will be activated
+		/// </summary>
+		/// <param name="motionSensor"></param>
+		/// <param name="powerPlugs">must be of type switch, with state change reporting</param>
+		public MotionSensorPowerPlug(IMotionSensor motionSensor, IList<IDevice> powerPlugs)
 		{
-			_powerPlugs   = powerPlugs;
+			_powerPlugs   = powerPlugs.Where(x => x is IStateChange && x is ISwitch).Select(x => (ISwitch)x).ToList();
 
 			Devices.Add(motionSensor);
 			foreach (var powerPlug in powerPlugs)
 			{
 				Devices.Add(powerPlug);
-				powerPlug.StateChanged += (sender, report) => { _currentSocketState = report.Value; };
+				((IStateChange)powerPlug).StateChanged += (sender, report) => { _currentSocketState = report.Value; };
 			}
 
 			motionSensor.MotionSensorTriggered += MotionSensorOnMotionSensorTriggered;

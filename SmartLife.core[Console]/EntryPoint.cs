@@ -10,7 +10,6 @@ namespace SmartLife.core.Demo
 			var p = new Program(logger);
 			while (true)
 				logger.Log(p.DoAction(Console.ReadLine()));
-
 		}
 	}
 }

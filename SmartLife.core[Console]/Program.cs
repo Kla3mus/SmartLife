@@ -31,14 +31,14 @@ namespace SmartLife.core.Demo
 
 			var zone = _smartHub.Zones.Where(x => x.Key == "#1").SelectMany(x => x.Value).Select(x => x.Device);
 
-			var powerPlug = zone.FirstOrDefault(x => x is IPowerPlug);
+			var powerPlug = zone.FirstOrDefault(x => x is ISwitch);
 			var motionSensor = zone.FirstOrDefault(x => x is IMotionSensor);
 
 			if (powerPlug != null && motionSensor != null)
 			{
-				_smartHub.AddOperation(new MotionSensorPowerPlug((IMotionSensor)motionSensor, new List<IPowerPlug> { (IPowerPlug)powerPlug }));
+				_smartHub.AddOperation(new MotionSensorPowerPlug((IMotionSensor)motionSensor, new List<ISwitch> { (ISwitch)powerPlug }));
 
-				var plugs = _smartHub.DeviceWrappers.Where(x => !x.Zones.Any()).Where(x => x is ILedRing).Select(x => (IPowerPlug)x.Device).ToList();
+				var plugs = _smartHub.DeviceWrappers.Where(x => !x.Zones.Any()).Where(x => x is ILedRing).Select(x => (ISwitch)x.Device).ToList();
 				_smartHub.AddOperation(new LuxSensorPowerPlugs((ILuxMeasure)motionSensor, plugs));
 			}
 
@@ -76,7 +76,7 @@ namespace SmartLife.core.Demo
 				switch (s)
 				{
 					case "0": //Off
-						foreach (IPowerPlug powerPlug in _smartHub.Devices.Where(x => x is IPowerPlug && activeDevices.All(y => x.DeviceId != y.DeviceId)))
+						foreach (ISwitch powerPlug in _smartHub.Devices.Where(x => x is ISwitch && activeDevices.All(y => x.DeviceId != y.DeviceId)))
 							powerPlug.Switch(false);
 
 						foreach (IDim powerPlug in _smartHub.Devices.Where(x => x is IDim && activeDevices.All(y => x.DeviceId != y.DeviceId)))
@@ -84,7 +84,7 @@ namespace SmartLife.core.Demo
 
 						return "turned off non active things";
 					case "1": //On
-						foreach (IPowerPlug powerPlug in _smartHub.Devices.Where(x => x is IPowerPlug && activeDevices.All(y => x.DeviceId != y.DeviceId)))
+						foreach (ISwitch powerPlug in _smartHub.Devices.Where(x => x is ISwitch && activeDevices.All(y => x.DeviceId != y.DeviceId)))
 							powerPlug.Switch(true);
 
 						foreach (IDim powerPlug in _smartHub.Devices.Where(x => x is IDim && activeDevices.All(y => x.DeviceId != y.DeviceId)))

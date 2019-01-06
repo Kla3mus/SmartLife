@@ -1,31 +1,31 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using SmartLife.Interfaces;
 
-namespace SmartLife.net.Demo
+namespace SmartLife.core.Demo
 {
 	public class LuxSensorPowerPlugs : IOperation
 	{
-		private readonly List<IPowerPlug> _powerPlugs;
+		private readonly IList<IDim> _powerPlugs;
 
-		public LuxSensorPowerPlugs(ILuxMeasure luxMeasure, IList<IPowerPlug> powerPlugs)
+		public LuxSensorPowerPlugs(ILuxMeasure luxMeasure, IList<IDim> powerPlugs)
 		{
-			_powerPlugs = powerPlugs.ToList();
+			_powerPlugs = powerPlugs;
 
 			Devices.Add(luxMeasure);
-			foreach (var powerPlug in powerPlugs)
+			foreach (var powerPlug in _powerPlugs)
 			{
+				powerPlug.Switch(false);
 				Devices.Add(powerPlug);
-				powerPlug.StateChanged += (sender, report) => { currentSocketState = report.Value; };
 			}
 
 			luxMeasure.LuxMeasurementTaken += (sender, report) =>
 			                                  {
 				                                  var value = report.Value < 10;
-												  if (IsActive)
-					                                  foreach (IPowerPlug powerPlug in _powerPlugs)
+												  if (IsActive) { 
+					                                  foreach (IDim powerPlug in _powerPlugs)
 						                                  powerPlug.Switch(value);
-			                                  };
+												  }
+											  };
 		}
 
 		private bool currentSocketState = false;
@@ -37,9 +37,10 @@ namespace SmartLife.net.Demo
 				return;
 
 			IsActive = true;
-			if (currentSocketState != IsActive)
-				foreach (IPowerPlug powerPlug in _powerPlugs)
+			if (currentSocketState != IsActive) { 
+				foreach (IDim powerPlug in _powerPlugs)
 					powerPlug.Switch(true);
+			}
 		}
 		public void Detach()
 		{

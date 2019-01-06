@@ -25,7 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\OOMI\Bulb.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\OOMI\LedStrip.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILogger.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IDim.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\LightAndSockets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeviceWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHumidityMeasure.cs" />
@@ -34,13 +34,15 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Interfaces.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\Fibaro\WallPlug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPowerMeasure.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPowerPlug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ITemperatureMeasure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IUvMeasure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Report.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISmartHouseFramework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IStorage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Log.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ManufacturerWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Operations\LuxSensorPowerPlugs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Operations\MotionSensorPowerPlug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SmartHub.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ZWaveFramework.cs" />
   </ItemGroup>

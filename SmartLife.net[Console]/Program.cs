@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using SmartLife.core.Demo;
 using SmartLife.Devices.Z_Wave.AeoTec;
 using SmartLife.Interfaces;
 
@@ -26,7 +27,7 @@ namespace SmartLife.net.Demo
 			if (false)
 				ConfigureSensors();
 
-			DoStandard(logger);
+			DoStandard();
 		}
 
 		private void ConfigureSensors()
@@ -46,21 +47,19 @@ namespace SmartLife.net.Demo
 			_smartHub = new SmartHub(logger, new List<ISmartHouseFramework> { zwave }, new FileStorage<DeviceWrapper>("DeviceWrappers.txt"));
 		}
 
-		private void DoStandard(ConsoleLogger logger) {
+		private void DoStandard() {
 
 			_smartHub.SaveDeviceWrappers();
 
-			var zone = _smartHub.Zones.Where(x => x.Key == "#1").SelectMany(x => x.Value).Select(x => x.Device);
+			var special    = _smartHub.Devices.Where(x => x is ISwitch && x is IStateChange).ToList();
+			var motionSensor = _smartHub.Devices.FirstOrDefault(x => x is IMotionSensor);
+			var luxSensor = _smartHub.Devices.FirstOrDefault(x => x is ILuxMeasure);
 
-			var powerPlug    = zone.FirstOrDefault(x => x is IPowerPlug);
-			var motionSensor = zone.FirstOrDefault(x => x is IMotionSensor);
-
-			if (powerPlug != null && motionSensor != null)
+			if (special.Any() && motionSensor != null)
 			{
-				_smartHub.AddOperation(new MotionSensorPowerPlug((IMotionSensor)motionSensor, new List<IPowerPlug> { (IPowerPlug)powerPlug }));
+				_smartHub.AddOperation(new MotionSensorPowerPlug((IMotionSensor)motionSensor, special ));
 
-				var plugs = _smartHub.DeviceWrappers.Where(x => !x.Zones.Any()).Where(x => x is ILedRing).Select(x => (IPowerPlug)x.Device).ToList();
-				_smartHub.AddOperation(new LuxSensorPowerPlugs((ILuxMeasure)motionSensor, plugs));
+				_smartHub.AddOperation(new LuxSensorPowerPlugs((ILuxMeasure)motionSensor, special));
 			}
 
 			var temp = _smartHub.DeviceWrappers.Select(x => x.Device).Where(x => x is IColorLight);
@@ -97,7 +96,7 @@ namespace SmartLife.net.Demo
 				switch (s)
 				{
 					case "0": //Off
-						foreach (IPowerPlug powerPlug in _smartHub.Devices.Where(x => x is IPowerPlug && activeDevices.All(y => x.DeviceId != y.DeviceId)))
+						foreach (ISwitch powerPlug in _smartHub.Devices.Where(x => x is ISwitch && activeDevices.All(y => x.DeviceId != y.DeviceId)))
 							powerPlug.Switch(false);
 
 						foreach (IDim powerPlug in _smartHub.Devices.Where(x => x is IDim && activeDevices.All(y => x.DeviceId != y.DeviceId)))
@@ -105,7 +104,7 @@ namespace SmartLife.net.Demo
 
 						return "turned off non active things";
 					case "1": //On
-						foreach (IPowerPlug powerPlug in _smartHub.Devices.Where(x => x is IPowerPlug && activeDevices.All(y => x.DeviceId != y.DeviceId)))
+						foreach (ISwitch powerPlug in _smartHub.Devices.Where(x => x is ISwitch && activeDevices.All(y => x.DeviceId != y.DeviceId)))
 							powerPlug.Switch(true);
 
 						foreach (IDim powerPlug in _smartHub.Devices.Where(x => x is IDim && activeDevices.All(y => x.DeviceId != y.DeviceId)))
