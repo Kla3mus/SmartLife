@@ -25,6 +25,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\OOMI\Bulb.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Devices\Z-Wave\OOMI\LedStrip.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ILogger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IOperation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\LightAndSockets.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)DeviceWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)FileStorage.cs" />

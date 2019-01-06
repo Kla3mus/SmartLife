@@ -56,11 +56,4 @@ namespace SmartLife.Interfaces
 	{
 		public MotionSensorReport(bool value) : base(ReportType.Motion, value) { }
 	}
-	public interface IOperation
-	{
-		bool IsActive { get; }
-		void Attach();
-		void Detach();
-		IList<IDevice> Devices { get; }
-	}
 }

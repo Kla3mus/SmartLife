@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SmartLife.Interfaces;
 
 namespace SmartLife.core.Demo
@@ -6,6 +7,9 @@ namespace SmartLife.core.Demo
 	public class LuxSensorPowerPlugs : IOperation
 	{
 		private readonly IList<IDim> _powerPlugs;
+
+		public DateTime From { get; set; }
+		public DateTime To { get; set; }
 
 		public LuxSensorPowerPlugs(ILuxMeasure luxMeasure, IList<IDim> powerPlugs)
 		{
