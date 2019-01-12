@@ -8,5 +8,6 @@ namespace SmartLife.Interfaces
 		void Attach();
 		void Detach();
 		IList<IDevice> Devices { get; }
+		OperationInformation OperationInformation { get; }
 	}
 }

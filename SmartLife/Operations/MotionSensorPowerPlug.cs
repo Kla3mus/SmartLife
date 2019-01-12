@@ -15,7 +15,7 @@ namespace SmartLife.core.Demo
 		/// </summary>
 		/// <param name="motionSensor"></param>
 		/// <param name="powerPlugs">must be of type switch, with state change reporting</param>
-		public MotionSensorPowerPlug(IMotionSensor motionSensor, IList<IDevice> powerPlugs)
+		public MotionSensorPowerPlug(IMotionSensor motionSensor, IList<IStateChange> powerPlugs)
 		{
 			_powerPlugs   = powerPlugs.Where(x => x is IStateChange && x is ISwitch).Select(x => (ISwitch)x).ToList();
 
@@ -51,6 +51,12 @@ namespace SmartLife.core.Demo
 		}
 
 		public IList<IDevice> Devices { get; } = new List<IDevice>();
+		public OperationInformation OperationInformation => new OperationInformation
+		                                                    {
+																Name = "Shine a light on mee!",
+																Description = "If movement is detected, turn on lights/sockets what-have-you.",
+																TypeFullName = nameof(MotionSensorPowerPlug)
+		                                                    };
 
 		private void MotionSensorOnMotionSensorTriggered(object sender, SensorReport e)
 		{
