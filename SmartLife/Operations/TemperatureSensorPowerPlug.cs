@@ -56,5 +56,11 @@ namespace SmartLife.core.Demo
 		}
 
 		public IList<IDevice> Devices { get; } = new List<IDevice>();
+		public OperationInformation OperationInformation => new OperationInformation
+		{
+			Name = "I'm warm.. fan me!",
+			Description = "If temperature falls below specified value, turn on fan",
+			TypeFullName = nameof(TemperatureSensorPowerPlug)
+		};
 	}
 }
