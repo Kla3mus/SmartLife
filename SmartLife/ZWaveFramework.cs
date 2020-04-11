@@ -17,7 +17,7 @@ namespace SmartLife
 		{
 			ZWavePortName = port;
 			if (string.IsNullOrEmpty(ZWavePortName))
-				ZWavePortName = SerialPortStream.GetPortNames().First(element => element != "COM1");
+				ZWavePortName = SerialPortStream.GetPortNames().Last(element => element != "COM1");
 		}
 
 		public event EventHandler<Log> Logged;

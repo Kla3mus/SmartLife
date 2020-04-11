@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2048
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30002.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "SmartLife", "SmartLife\SmartLife.shproj", "{1D192E50-EAE4-40EF-8AD5-412B0A4F5BD7}"
 EndProject
@@ -15,6 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartLife.net[Demo]", "Smar
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		SmartLife\SmartLife.projitems*{03f9a39d-7ffa-42f7-bf3d-34669ab2704f}*SharedItemsImports = 5
 		SmartLife\SmartLife.projitems*{1d192e50-eae4-40ef-8ad5-412b0a4f5bd7}*SharedItemsImports = 13
 		SmartLife\SmartLife.projitems*{40a10d53-c003-40c2-bcb5-5ae216531e4e}*SharedItemsImports = 4
 	EndGlobalSection

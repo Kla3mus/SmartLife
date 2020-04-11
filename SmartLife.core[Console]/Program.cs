@@ -21,8 +21,7 @@ namespace SmartLife.core.Demo
 		private readonly SmartHub _smartHub;
 		public Program(ConsoleLogger logger)
 		{
-			ZWaveFramework zwave = new ZWaveFramework();
-			_smartHub = new SmartHub(logger, new List<ISmartHouseFramework> { zwave }, new FileStorage<DeviceWrapper>("DeviceWrappers.txt"));
+			_smartHub = new SmartHub(logger, new List<ISmartHouseFramework> { new ZWaveFramework() }, new FileStorage<DeviceWrapper>("DeviceWrappers.txt"));
 
 			_smartHub.SaveDeviceWrappers();
 
@@ -36,10 +35,10 @@ namespace SmartLife.core.Demo
 
 			if (powerPlug != null && motionSensor != null)
 			{
-				_smartHub.AddOperation(new MotionSensorPowerPlug((IMotionSensor)motionSensor, new List<ISwitch> { (ISwitch)powerPlug }));
+				_smartHub.AddOperation(new TemperatureSensorPowerPlug((ITemperatureMeasure)motionSensor, (ISwitch)powerPlug,18));
 
-				var plugs = _smartHub.DeviceWrappers.Where(x => !x.Zones.Any()).Where(x => x is ILedRing).Select(x => (ISwitch)x.Device).ToList();
-				_smartHub.AddOperation(new LuxSensorPowerPlugs((ILuxMeasure)motionSensor, plugs));
+				//var plugs = _smartHub.DeviceWrappers.Where(x => !x.Zones.Any()).Where(x => x is ILedRing).Select(x => x.Device).ToList();
+				//_smartHub.AddOperation(new LuxSensorPowerPlugs((ILuxMeasure)motionSensor, plugs));
 			}
 
 			var temp = _smartHub.DeviceWrappers.Select(x => x.Device).Where(x => x is IColorLight);

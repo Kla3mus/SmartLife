@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using SmartLife.Interfaces;
 using SmartLife.net.Devices.AeoTec;
 using ZWave;

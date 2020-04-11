@@ -48,7 +48,10 @@ namespace SmartLife
 			framework.Start();
 
 			foreach (var device in framework.Devices)
+			{
 				Devices.Add(device);
+				_logger.Log($"Found device: {device.DeviceId}");
+			}
 
 			_logger.Log($"- started {framework.GetType().Name}");
 		}

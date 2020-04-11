@@ -59,7 +59,7 @@ namespace SmartLife.net.Demo
 			{
 				_smartHub.AddOperation(new MotionSensorPowerPlug((IMotionSensor)motionSensor, special ));
 
-				_smartHub.AddOperation(new LuxSensorPowerPlugs((ILuxMeasure)motionSensor, special));
+				_smartHub.AddOperation(new LuxSensorPowerPlugs((ILuxMeasure)motionSensor, new List<IDim> { (IDim)special }));
 			}
 
 			var temp = _smartHub.DeviceWrappers.Select(x => x.Device).Where(x => x is IColorLight);

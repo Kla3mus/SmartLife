@@ -43,6 +43,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Log.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ManufacturerWrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Operations\LuxSensorPowerPlugs.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Operations\TemperatureSensorPowerPlug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Operations\MotionSensorPowerPlug.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)SmartHub.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ZWaveFramework.cs" />
