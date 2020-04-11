@@ -37,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPowerMeasure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\ITemperatureMeasure.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IUvMeasure.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\OperationInformation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\Report.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ISmartHouseFramework.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IStorage.cs" />

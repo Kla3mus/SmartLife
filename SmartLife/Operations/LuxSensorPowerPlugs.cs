@@ -55,5 +55,11 @@ namespace SmartLife.core.Demo
 		}
 
 		public IList<IDevice> Devices { get; } = new List<IDevice>();
+		public OperationInformation OperationInformation => new OperationInformation
+		                                                    {
+																Name = "Keep it lit!",
+																Description = "Will adjust the dimmable lights so that the room keeps at minimum a defined lux.",
+																TypeFullName = nameof(LuxSensorPowerPlugs)
+		                                                    };
 	}
 }
