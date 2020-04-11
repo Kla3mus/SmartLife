@@ -51,15 +51,17 @@ namespace SmartLife.net.Demo
 
 			_smartHub.SaveDeviceWrappers();
 
-			var special    = _smartHub.Devices.Where(x => x is ISwitch && x is IStateChange).ToList();
-			var motionSensor = _smartHub.Devices.FirstOrDefault(x => x is IMotionSensor);
-			var luxSensor = _smartHub.Devices.FirstOrDefault(x => x is ILuxMeasure);
+			var zone = _smartHub.Zones.Where(x => x.Key == "#1").SelectMany(x => x.Value).Select(x => x.Device);
 
-			if (special.Any() && motionSensor != null)
+			var powerPlug = zone.FirstOrDefault(x => x is ISwitch);
+			var motionSensor = zone.FirstOrDefault(x => x is IMotionSensor);
+
+			if (powerPlug != null && motionSensor != null)
 			{
-				_smartHub.AddOperation(new MotionSensorPowerPlug((IMotionSensor)motionSensor, special ));
+				_smartHub.AddOperation(new TemperatureSensorPowerPlug((ITemperatureMeasure)motionSensor, (ISwitch)powerPlug, 18));
 
-				_smartHub.AddOperation(new LuxSensorPowerPlugs((ILuxMeasure)motionSensor, new List<IDim> { (IDim)special }));
+				//var plugs = _smartHub.DeviceWrappers.Where(x => !x.Zones.Any()).Where(x => x is ILedRing).Select(x => x.Device).ToList();
+				//_smartHub.AddOperation(new LuxSensorPowerPlugs((ILuxMeasure)motionSensor, plugs));
 			}
 
 			var temp = _smartHub.DeviceWrappers.Select(x => x.Device).Where(x => x is IColorLight);
