@@ -7,7 +7,7 @@
   <Import Project="..\SmartLife\SmartLife.projitems" Label="Shared" />
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="ZWave4Net" Version="1.0.0.182" />
   </ItemGroup>
 
